@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miyu DOS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #ccc;
+        }
+
+        .dos-container {
+            background-color: #000;
+            border: 2px solid #333;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 100, 0, 0.5);
+            width: 100%;
+            height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dos-header {
+            background-color: #002200;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            flex-shrink: 0;
+        }
+
+        .dos-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #0f0;
+        }
+
+        .dos-body {
+            padding: 5px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            flex-grow: 1;
+        }
+
+        .output-area {
+            margin-bottom: 10px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .command-line {
+            display: flex;
+            align-items: center;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        .prompt {
+            color: #0f0;
+            font-weight: bold;
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+
+        .command-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #0f0;
+            font-size: 16px;
+            flex-grow: 1;
+            font-family: 'Courier New', monospace;
+        }
+
+        .command-input::placeholder {
+            color: #555;
+        }
+
+        .command-history {
+            list-style-type: none;
+        }
+
+        .command-item {
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .command-text {
+            color: #0f0;
+        }
+
+        .output-text {
+            color: #ccc;
+            margin-left: 20px;
+        }
+
+        .error-text {
+            color: #f00;
+            margin-left: 20px;
+        }
+
+        .dos-footer {
+            padding: 8px 15px;
+            background-color: #001100;
+            border-top: 1px solid #333;
+            font-size: 12px;
+            color: #0a0;
+            display: flex;
+            justify-content: space-between;
+            flex-shrink: 0;
+        }
+
+        .blink {
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* 内置命令样式 */
+        .help-command {
+            color: #0ff;
+        }
+
+        .success {
+            color: #0f0;
+        }
+
+        .info {
+            color: #0af;
+        }
+
+        .warning {
+            color: #ff0;
+        }
+
+        .directory {
+            color: #0ff;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .dos-container {
+                max-width: 100%;
+            }
+
+            .dos-body {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="dos-container" id="dosContainer">
+    <div class="dos-header">
+        <div class="dos-title" id="dosTitle">Miyu DOS</div>
+    </div>
+
+    <div class="dos-body" id="outputArea">
+        <!-- 初始欢迎信息将由JS生成 -->
+        <div id="commandHistory"></div>
+
+        <!-- 当前命令行 -->
+        <div class="command-line">
+            <div class="prompt" id="commandPrompt">C:\&gt;</div>
+            <input type="text" class="command-input" id="commandInput" placeholder="输入命令..." autofocus>
+        </div>
+    </div>
+
+    <div class="dos-footer" id="dosFooter">
+        <div>按Enter执行命令，按↑↓键浏览历史命令</div>
+        <div>就绪</div>
+    </div>
+</div>
+
+<script>
+    // ==================== 配置对象 ====================
+    const CONFIG = {
+        // 窗口配置
+        window: {
+            title: "Miyu DOS",  // 窗口标题
+            footerLeftText: "按Enter执行命令，按↑↓键浏览历史命令",
+            footerRightText: "就绪",
+        },
+
+        // 文件系统配置
+        fileSystem: {
+            // 使用全路径存储文件，目录以"\"结尾
+            initialFiles: {
+                "C:\\readme.txt": "Miyu",
+            },
+            currentDir: "C:\\",    // 当前目录
+            rootDir: "C:\\",       // 根目录
+        },
+
+        // 命令系统配置
+        commands: {
+            // 命令配置将在初始化时动态注册
+        },
+
+        // 颜色配置
+        colors: {
+            prompt: "#0f0",       // 提示符颜色
+            command: "#0f0",      // 命令文本颜色
+            output: "#ccc",       // 普通输出颜色
+            error: "#f00",        // 错误输出颜色
+            success: "#0f0",      // 成功消息颜色
+            info: "#0af",         // 信息消息颜色
+            warning: "#ff0",      // 警告消息颜色
+            directory: "#0ff",    // 目录颜色
+        },
+
+        // 欢迎消息
+        welcomeMessages: [
+        ]
+    };
+
+    class DosSystem {
+        constructor(config) {
+            this.config = config;
+            this.commandHistory = [];
+            this.historyIndex = -1;
+            this.fileSystem = new Map();
+            this.currentDir = config.fileSystem.currentDir;
+            this.rootDir = config.fileSystem.rootDir;
+            this.commands = {};
+
+            // 初始化DOM元素
+            this.dosContainer = document.getElementById('dosContainer');
+            this.dosTitle = document.getElementById('dosTitle');
+            this.outputArea = document.getElementById('outputArea');
+            this.commandHistoryEl = document.getElementById('commandHistory');
+            this.commandInput = document.getElementById('commandInput');
+            this.commandPrompt = document.getElementById('commandPrompt');
+            this.dosFooter = document.getElementById('dosFooter');
+
+            // 应用配置
+            this.applyConfig();
+
+            // 初始化文件系统
+            this.initFileSystem();
+
+            // 初始化命令系统
+            this.initCommands();
+
+            // 绑定事件
+            this.bindEvents();
+
+            // 显示欢迎信息
+            this.showWelcome();
+        }
+
+        applyConfig() {
+            // 设置标题
+            this.dosTitle.textContent = this.config.window.title;
+
+            // 设置页脚
+            this.dosFooter.children[0].textContent = this.config.window.footerLeftText;
+            this.dosFooter.children[1].textContent = this.config.window.footerRightText;
+
+            // 设置提示符
+            this.updatePrompt();
+
+            // 设置颜色
+            this.setColor('prompt', this.config.colors.prompt);
+            this.setColor('command', this.config.colors.command);
+        }
+
+        setColor(type, color) {
+            switch(type) {
+                case 'prompt':
+                    document.querySelectorAll('.prompt').forEach(el => el.style.color = color);
+                    break;
+                case 'command':
+                    document.querySelectorAll('.command-text').forEach(el => el.style.color = color);
+                    break;
+                case 'output':
+                    document.querySelectorAll('.output-text').forEach(el => el.style.color = color);
+                    break;
+                case 'error':
+                    document.querySelectorAll('.error-text').forEach(el => el.style.color = color);
+                    break;
+            }
+        }
+
+        updatePrompt() {
+            this.commandPrompt.textContent = this.currentDir + ">";
+        }
+
+        // 初始化文件系统，使用全路径
+        initFileSystem() {
+            // 初始化文件系统，使用全路径作为键
+            Object.entries(this.config.fileSystem.initialFiles).forEach(([filepath, content]) => {
+                this.fileSystem.set(this.normalizePath(filepath), content);
+            });
+
+            console.log(`文件系统已初始化，包含 ${this.fileSystem.size} 个项目`);
+        }
+
+        // 路径规范化函数
+        normalizePath(path) {
+            // 统一使用反斜杠，并确保格式一致
+            let normalized = path.replace(/\//g, '\\')
+                .replace(/\\+/g, '\\');
+
+            // 如果是目录路径，确保以反斜杠结尾
+            if (normalized.endsWith('\\') && normalized.length > 3) {
+                return normalized;
+            }
+
+            return normalized;
+        }
+
+        // 判断路径是否为目录
+        isDirectory(path) {
+            const normalizedPath = this.normalizePath(path);
+            // 检查是否是目录：以反斜杠结尾，或者在文件系统中标记为[DIR]
+            return normalizedPath.endsWith('\\') ||
+                this.fileSystem.get(normalizedPath) === '[DIR]';
+        }
+
+        // 将相对路径转换为绝对路径
+        resolvePath(relativePath) {
+            if (!relativePath || relativePath === '') {
+                return this.currentDir;
+            }
+
+            // 处理绝对路径
+            if (relativePath.match(/^[a-zA-Z]:/i)) {
+                return this.normalizePath(relativePath);
+            }
+
+            // 处理相对路径
+            let result = this.currentDir;
+
+            // 处理上级目录
+            if (relativePath.startsWith('..\\') || relativePath === '..') {
+                const parts = result.split('\\').filter(p => p !== '');
+                if (parts.length > 1) {
+                    parts.pop(); // 移除最后一部分
+                    result = parts.join('\\') + '\\';
+                }
+
+                // 如果还有更多路径组件
+                if (relativePath !== '..') {
+                    const remainingPath = relativePath.substring(3);
+                    return this.normalizePath(result + remainingPath);
+                }
+
+                return this.normalizePath(result + '\\');
+            }
+
+            // 处理当前目录
+            if (relativePath.startsWith('.\\') || relativePath === '.') {
+                if (relativePath === '.') {
+                    return this.normalizePath(result);
+                }
+                return this.normalizePath(result + relativePath.substring(2));
+            }
+
+            // 处理根目录
+            if (relativePath.startsWith('\\')) {
+                return this.normalizePath(this.rootDir + relativePath.substring(1));
+            }
+
+            // 普通相对路径
+            return this.normalizePath(result + relativePath);
+        }
+
+        // 获取当前目录下的文件和目录列表
+        getItemsInCurrentDir() {
+            const items = [];
+
+            for (const [itemPath, content] of this.fileSystem.entries()) {
+                // 检查项目是否在当前目录下
+                if (itemPath.startsWith(this.currentDir) && itemPath !== this.currentDir) {
+                    // 获取相对路径
+                    const relativePath = itemPath.substring(this.currentDir.length);
+
+                    // 检查是否直接在当前目录下（不在子目录中）
+                    if (!relativePath.includes('\\') ||
+                        (relativePath.includes('\\') && !relativePath.substring(relativePath.indexOf('\\') + 1).includes('\\'))) {
+
+                        // 如果是目录，确保以反斜杠结尾
+                        const isDir = this.isDirectory(itemPath);
+                        const displayName = isDir ?
+                            relativePath.split('\\')[0] + '\\' :
+                            relativePath.split('\\')[0];
+
+                        items.push({
+                            name: displayName,
+                            fullPath: itemPath,
+                            content: content,
+                            isDirectory: isDir,
+                            size: isDir ? '-' : content.length
+                        });
+                    }
+                }
+            }
+
+            return items;
+        }
+
+        initCommands() {
+            // 注册内置命令
+            this.registerCommand({
+                name: "help",
+                description: "显示所有支持的命令和它们的说明",
+                execute: (args) => this.helpCommand(args)
+            });
+
+            this.registerCommand({
+                name: "ls",
+                description: "列出当前目录下的文件和子目录",
+                execute: (args) => this.lsCommand(args)
+            });
+
+            this.registerCommand({
+                name: "ll",
+                description: "列出当前目录下的文件和子目录",
+                execute: (args) => this.llCommand(args)
+            });
+
+            this.registerCommand({
+                name: "cd",
+                description: "切换当前目录",
+                execute: (args) => this.cdCommand(args)
+            });
+
+            this.registerCommand({
+                name: "mkdir",
+                description: "创建新目录",
+                execute: (args) => this.mkdirCommand(args)
+            });
+
+            this.registerCommand({
+                name: "echo",
+                description: "显示文本消息",
+                execute: (args) => this.echoCommand(args)
+            });
+
+            this.registerCommand({
+                name: "clear",
+                description: "清空屏幕",
+                execute: (args) => this.clearCommand(args)
+            });
+
+            this.registerCommand({
+                name: "cls",
+                description: "清空屏幕",
+                execute: (args) => this.clearCommand(args)
+            });
+
+            this.registerCommand({
+                name: "cat",
+                description: "显示文件内容",
+                execute: (args) => this.catCommand(args)
+            });
+
+            this.registerCommand({
+                name: "color",
+                description: "更改输出颜色（green, red, blue, yellow）",
+                execute: (args) => this.colorCommand(args)
+            });
+
+            this.registerCommand({
+                name: "history",
+                description: "显示命令历史",
+                execute: (args) => this.historyCommand(args)
+            });
+
+            this.registerCommand({
+                name: "calc",
+                description: "计算数学表达式，如：calc 5+3*2",
+                execute: (args) => this.calcCommand(args)
+            });
+
+            this.registerCommand({
+                name: "date",
+                description: "显示当前日期和时间",
+                execute: (args) => this.dateCommand(args)
+            });
+
+            // 额外示例命令：显示当前目录信息
+            this.registerCommand({
+                name: "pwd",
+                description: "显示当前目录路径",
+                execute: (args) => this.pwdCommand(args)
+            });
+
+            this.registerCommand({
+                name: "touch",
+                description: "创建空文件或更新文件时间戳",
+                execute: (args) => this.touchCommand(args)
+            });
+
+            console.log(`已注册 ${Object.keys(this.commands).length} 个命令`);
+        }
+
+        registerCommand(command) {
+            if (!command.name || !command.execute) {
+                console.error("注册命令失败：命令必须包含name和execute属性");
+                return;
+            }
+
+            this.commands[command.name] = {
+                description: command.description || "没有描述",
+                execute: command.execute
+            };
+
+            console.log(`已注册命令: ${command.name}`);
+        }
+
+        bindEvents() {
+            // 绑定输入框事件
+            this.commandInput.addEventListener('keydown', (e) => this.handleKeyDown(e));
+            this.commandInput.addEventListener('keyup', (e) => this.handleKeyUp(e));
+
+            // 窗口点击时聚焦输入框
+            this.dosContainer.addEventListener('click', () => {
+                this.commandInput.focus();
+            });
+
+            // 窗口大小变化时调整
+            window.addEventListener('resize', () => this.handleResize());
+        }
+
+        handleResize() {
+            // 可以在这里添加窗口大小变化的处理逻辑
+            // 例如：调整输出区域的高度
+        }
+
+        showWelcome() {
+            this.config.welcomeMessages.forEach(message => {
+                this.addOutput(message, 'output');
+            });
+        }
+
+        handleKeyDown(event) {
+            if (event.key === 'Enter') {
+                this.executeCommand();
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                this.navigateHistory(-1);
+            } else if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                this.navigateHistory(1);
+            } else if (event.key === 'Tab') {
+                event.preventDefault();
+                this.autoCompleteCommand();
+            } else if (event.ctrlKey && event.key === 'l') {
+                event.preventDefault();
+                this.executeBuiltInCommand('clear', []);
+            } else if (event.key === '!') {
+                // 当输入!时，显示历史记录提示
+                setTimeout(() => {
+                    if (this.commandInput.value === '!') {
+                        this.scrollToBottom();
+                    }
+                }, 100);
+            }
+        }
+
+        handleKeyUp(event) {
+            // 可以添加其他快捷键处理
+        }
+
+        // 修改executeCommand函数
+        executeCommand() {
+            let command = this.commandInput.value.trim();
+
+            if (!command) {
+                this.addCommandToHistory('');
+                this.scrollToBottom();
+                this.commandInput.value = '';
+                return;
+            }
+
+            // 处理!命令（执行历史记录）
+            if (command.startsWith('!')) {
+                const result = this.processBangCommand(command);
+                if (result.error) {
+                    this.addCommandToHistory(command);
+                    this.addOutput(result.message, 'error');
+                    this.scrollToBottom();
+                    this.commandInput.value = '';
+                    return;
+                } else {
+                    command = result.command; // 使用历史命令替换当前命令
+                }
+            }
+
+            // 保存到历史记录（保存实际执行的命令，不是!命令）
+            this.commandHistory.push(command);
+            this.historyIndex = this.commandHistory.length;
+
+            // 显示命令
+            this.addCommandToHistory(command);
+
+            // 执行命令
+            this.processCommand(command);
+
+            // 清空输入框
+            this.commandInput.value = '';
+
+            // 滚动到底部
+            this.scrollToBottom();
+        }
+
+        processCommand(fullCommand) {
+            const parts = fullCommand.split(' ');
+            const commandName = parts[0].toLowerCase();
+            const args = parts.slice(1);
+
+            if (this.commands[commandName]) {
+                try {
+                    const result = this.commands[commandName].execute(args);
+                    if (result !== undefined) {
+                        this.addOutput(result, 'output');
+                    }
+                } catch (error) {
+                    this.addOutput(`执行命令时出错: ${error.message}`, 'error');
+                }
+            } else {
+                this.addOutput(`未知命令: ${commandName}。输入 help 查看可用命令。`, 'error');
+            }
+        }
+
+        executeBuiltInCommand(commandName, args) {
+            if (this.commands[commandName]) {
+                try {
+                    const result = this.commands[commandName].execute(args);
+                    if (result !== undefined) {
+                        this.addOutput(result, 'output');
+                    }
+                } catch (error) {
+                    this.addOutput(`执行命令时出错: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        // ==================== 命令实现 ====================
+
+        helpCommand(args) {
+            // 按命令名称字典序排序
+            const sortedCommands = Object.keys(this.commands).sort();
+
+            let helpText = "可用命令:\n";
+            helpText += "=".repeat(50) + "\n";
+
+            sortedCommands.forEach(cmdName => {
+                const cmd = this.commands[cmdName];
+                helpText += `  ${cmdName.padEnd(15)} - ${cmd.description}\n`;
+            });
+
+            helpText += "\n示例:\n";
+            helpText += "  touch file.txt          # 创建空文件\n";
+            helpText += "  touch a.txt b.txt       # 创建多个空文件\n";
+            helpText += "  !!                      # 执行上一条命令\n";
+            helpText += "  !1                      # 执行第一条历史命令\n";
+            helpText += "  !ls                     # 执行最近一次ls命令\n";
+            helpText += "  mkdir newdir             # 创建新目录\n";
+            helpText += "  cd newdir                # 切换到新目录\n";
+            helpText += "  cd ..                    # 切换到上级目录\n";
+            helpText += "  cd \\                    # 切换到根目录\n";
+            helpText += "  ls                       # 列出当前目录内容\n";
+            helpText += "  ll                       # 竖版列表\n";
+            helpText += "  pwd                      # 显示当前目录\n";
+            helpText += "  echo Hello > file.txt    # 创建/覆盖文件\n";
+            helpText += "  echo World >> file.txt   # 追加内容到文件\n";
+            helpText += "  cat file.txt             # 显示文件内容\n";
+            helpText += "  calc 5+3*2               # 计算表达式\n";
+            helpText += "  color green              # 更改输出颜色\n";
+
+            return helpText;
+        }
+
+
+
+        // 添加!命令处理函数
+        processBangCommand(bangCommand) {
+            // 移除!前缀
+            const bangArg = bangCommand.substring(1).trim();
+
+            // 处理!! - 执行上一条命令
+            if (bangArg === '!') {
+                if (this.commandHistory.length === 0) {
+                    return { error: true, message: "历史记录为空，无法执行!!" };
+                }
+                const lastCommand = this.commandHistory[this.commandHistory.length - 1];
+                return { error: false, command: lastCommand };
+            }
+
+            // 处理!n - 执行第n条命令
+            const match = bangArg.match(/^(\d+)$/);
+            if (match) {
+                const index = parseInt(match[1], 10);
+                if (index < 1 || index > this.commandHistory.length) {
+                    return {
+                        error: true,
+                        message: `历史记录索引 ${index} 超出范围 (1-${this.commandHistory.length})`
+                    };
+                }
+                return { error: false, command: this.commandHistory[index - 1] };
+            }
+
+            // 处理!string - 执行最近一次以string开头的命令
+            if (bangArg.length > 0) {
+                for (let i = this.commandHistory.length - 1; i >= 0; i--) {
+                    if (this.commandHistory[i].startsWith(bangArg)) {
+                        return { error: false, command: this.commandHistory[i] };
+                    }
+                }
+                return { error: true, message: `找不到以 "${bangArg}" 开头的历史命令` };
+            }
+
+            return { error: true, message: "无效的!命令格式" };
+        }
+
+        lsCommand(args) {
+            // 获取当前目录下的项目和目录
+            const items = this.getItemsInCurrentDir();
+
+            if (items.length === 0) {
+                return `目录: ${this.currentDir}\n目录为空`;
+            }
+
+            // 按名称排序
+            items.sort((a, b) => a.name.localeCompare(b.name));
+
+            let output = `目录: ${this.currentDir}\n`;
+            output += "-".repeat(50) + "\n";
+
+            // 每行显示3个项目
+            let line = '';
+            items.forEach((item, index) => {
+                const displayName = item.isDirectory ?
+                    `<span class="directory">${item.name}</span>` :
+                    item.name;
+
+                if (index > 0 && index % 3 === 0) {
+                    output += line + "\n";
+                    line = displayName.padEnd(25);
+                } else {
+                    line += displayName.padEnd(25);
+                }
+            });
+
+            if (line) {
+                output += line + "\n";
+            }
+
+            output += `\n共 ${items.filter(item => !item.isDirectory).length} 个文件, ${items.filter(item => item.isDirectory).length} 个子目录`;
+
+            // 创建HTML输出
+            const outputElement = document.createElement('div');
+            outputElement.className = 'output-text';
+            outputElement.innerHTML = output.replace(/\n/g, '<br>');
+            this.commandHistoryEl.appendChild(outputElement);
+
+            return null; // 返回null表示已经直接添加了HTML输出
+        }
+
+        llCommand(args) {
+            // 获取当前目录下的项目和目录
+            const items = this.getItemsInCurrentDir();
+
+            if (items.length === 0) {
+                return `目录: ${this.currentDir}\n目录为空`;
+            }
+
+            // 按名称排序
+            items.sort((a, b) => a.name.localeCompare(b.name));
+
+            let output = `目录: ${this.currentDir}\n`;
+            output += "-".repeat(50) + "\n";
+            output += "名称".padEnd(30) + "类型".padEnd(10) + "大小\n";
+            output += "-".repeat(50) + "\n";
+
+            items.forEach(item => {
+                const nameDisplay = item.isDirectory ?
+                    `<span class="directory">${item.name}</span>` :
+                    item.name;
+
+                const type = item.isDirectory ? "目录" : "文件";
+                output += nameDisplay.padEnd(30) + type.padEnd(10) + item.size + "\n";
+            });
+
+            output += `\n共 ${items.filter(item => !item.isDirectory).length} 个文件, ${items.filter(item => item.isDirectory).length} 个子目录`;
+
+            // 创建HTML输出
+            const outputElement = document.createElement('div');
+            outputElement.className = 'output-text';
+            outputElement.innerHTML = output.replace(/\n/g, '<br>');
+            this.commandHistoryEl.appendChild(outputElement);
+
+            return null; // 返回null表示已经直接添加了HTML输出
+        }
+
+        cdCommand(args) {
+            if (args.length === 0) {
+                return `当前目录: ${this.currentDir}`;
+            }
+
+            const targetPath = args[0];
+            let newPath;
+
+            // 处理特殊路径
+            if (targetPath === '\\' || targetPath === '/') {
+                // 根目录
+                newPath = this.rootDir;
+            } else if (targetPath === '..') {
+                // 上级目录
+                const parts = this.currentDir.split('\\').filter(p => p !== '');
+                if (parts.length > 1) {
+                    parts.pop(); // 移除最后一部分
+                    newPath = parts.join('\\') + '\\';
+                } else {
+                    newPath = this.rootDir;
+                }
+            } else if (targetPath === '.') {
+                // 当前目录
+                newPath = this.currentDir;
+            } else {
+                // 解析路径
+                newPath = this.resolvePath(targetPath);
+
+                // 确保目录路径以反斜杠结尾
+                if (!newPath.endsWith('\\')) {
+                    newPath += '\\';
+                }
+            }
+
+            // 检查路径是否存在（是否是目录）
+            if (this.isDirectory(newPath)) {
+                this.currentDir = newPath;
+                this.updatePrompt();
+                return `当前目录已更改为: ${this.currentDir}`;
+            } else {
+                // 检查是否可以作为目录（即使没有显式创建）
+                // 即检查是否有文件或目录以此为前缀
+                let existsAsDir = false;
+                for (const path of this.fileSystem.keys()) {
+                    if (path.startsWith(newPath)) {
+                        existsAsDir = true;
+                        break;
+                    }
+                }
+
+                if (existsAsDir) {
+                    this.currentDir = newPath;
+                    this.updatePrompt();
+                    return `当前目录已更改为: ${this.currentDir}`;
+                } else {
+                    return `错误: 目录不存在 "${targetPath}"`;
+                }
+            }
+        }
+
+        mkdirCommand(args) {
+            if (args.length === 0) {
+                return "用法: mkdir [目录名]";
+            }
+
+            const dirName = args[0];
+
+            // 解析目录路径
+            let fullPath;
+            if (dirName.includes('\\') || dirName.includes('/')) {
+                // 如果是完整路径
+                fullPath = this.resolvePath(dirName);
+            } else {
+                // 如果是相对路径，在当前目录下创建
+                fullPath = this.currentDir + dirName;
+            }
+
+            // 确保目录路径以反斜杠结尾
+            if (!fullPath.endsWith('\\')) {
+                fullPath += '\\';
+            }
+
+            // 检查目录是否已存在
+            if (this.fileSystem.has(fullPath)) {
+                return `错误: 目录已存在 "${dirName}"`;
+            }
+
+            // 创建目录（在文件系统中添加一个标记）
+            this.fileSystem.set(fullPath, '[DIR]');
+            return `目录已创建: ${fullPath}`;
+        }
+
+        echoCommand(args) {
+            if (args.length === 0) {
+                return "用法: echo [文本] 或 echo [文本] > [文件名] 或 echo [文本] >> [文件名]";
+            }
+
+            // 检查是否是重定向操作
+            const redirectIndex = args.findIndex(arg => arg === '>' || arg === '>>');
+
+            if (redirectIndex === -1) {
+                // 简单echo，显示文本
+                return args.join(' ');
+            } else {
+                // 重定向操作
+                const operator = args[redirectIndex];
+                const filename = args[redirectIndex + 1];
+                const text = args.slice(0, redirectIndex).join(' ');
+
+                if (!filename) {
+                    return "错误: 请指定文件名。";
+                }
+
+                // 解析文件路径（相对于当前目录）
+                const fullPath = this.resolvePath(filename);
+
+                // 检查目标是否是目录
+                if (this.isDirectory(fullPath)) {
+                    return `错误: 无法写入目录 "${filename}"`;
+                }
+
+                if (!text && operator === '>') {
+                    // 创建空文件
+                    this.fileSystem.set(fullPath, "");
+                    return `已创建空文件: ${fullPath}`;
+                } else if (!text) {
+                    return "错误: 请提供要写入的文本。";
+                }
+
+                if (operator === '>') {
+                    // 覆盖写入
+                    this.fileSystem.set(fullPath, text);
+                    return `已写入文件: ${fullPath}`;
+                } else if (operator === '>>') {
+                    // 追加写入
+                    const existingContent = this.fileSystem.get(fullPath) || "";
+                    this.fileSystem.set(fullPath, existingContent + (existingContent ? "\n" : "") + text);
+                    return `已追加内容到文件: ${fullPath}`;
+                }
+            }
+        }
+
+        clearCommand(args) {
+            this.commandHistoryEl.innerHTML = '';
+            this.historyIndex = -1;
+            return "屏幕已清空。";
+        }
+
+        catCommand(args) {
+            if (args.length === 0) {
+                return "用法: cat [文件名]";
+            }
+
+            const filename = args[0];
+            const fullPath = this.resolvePath(filename);
+
+            // 检查是否是目录
+            if (this.isDirectory(fullPath)) {
+                return `错误: "${filename}" 是一个目录，无法显示内容`;
+            }
+
+            if (!this.fileSystem.has(fullPath)) {
+                return `错误: 文件 "${filename}" 不存在。`;
+            }
+
+            const content = this.fileSystem.get(fullPath);
+            return `文件: ${fullPath}\n${"-".repeat(50)}\n${content}`;
+        }
+
+        colorCommand(args) {
+            if (args.length === 0) {
+                return `当前颜色: ${this.config.colors.command}\n可用颜色: green, red, blue, yellow, cyan, magenta, white`;
+            }
+
+            const color = args[0].toLowerCase();
+            const colorMap = {
+                'green': '#0f0',
+                'red': '#f00',
+                'blue': '#0af',
+                'yellow': '#ff0',
+                'cyan': '#0ff',
+                'magenta': '#f0f',
+                'white': '#fff'
+            };
+
+            if (colorMap[color]) {
+                this.setColor('prompt', colorMap[color]);
+                this.setColor('command', colorMap[color]);
+                this.config.colors.prompt = colorMap[color];
+                this.config.colors.command = colorMap[color];
+                return `输出颜色已更改为: ${color}`;
+            } else {
+                return `错误: 未知颜色 '${color}'。可用颜色: green, red, blue, yellow, cyan, magenta, white`;
+            }
+        }
+
+        historyCommand(args) {
+            if (this.commandHistory.length === 0) {
+                return "命令历史为空。";
+            }
+
+            let historyText = "命令历史:\n";
+            historyText += "-".repeat(50) + "\n";
+
+            this.commandHistory.forEach((cmd, index) => {
+                historyText += `  ${index + 1}: ${cmd}\n`;
+            });
+
+            return historyText;
+        }
+
+        calcCommand(args) {
+            if (args.length === 0) {
+                return "用法: calc [表达式]，例如: calc 5+3*2";
+            }
+
+            try {
+                // 使用Function构造函数更安全地计算数学表达式
+                const expression = args.join(' ');
+                const result = Function('"use strict"; return (' + expression + ')')();
+                return `${expression} = ${result}`;
+            } catch (error) {
+                return `计算错误: ${error.message}`;
+            }
+        }
+
+        dateCommand(args) {
+            const now = new Date();
+            return now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                weekday: 'long',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        pwdCommand(args) {
+            return `当前目录: ${this.currentDir}`;
+        }
+
+        // 在命令实现部分添加touchCommand函数
+        touchCommand(args) {
+            if (args.length === 0) {
+                return "用法: touch [文件名] 或 touch [文件名1] [文件名2] ...";
+            }
+
+            let createdFiles = [];
+
+            args.forEach(filename => {
+                // 解析文件路径（相对于当前目录）
+                const fullPath = this.resolvePath(filename);
+
+                // 检查是否是目录
+                if (this.isDirectory(fullPath)) {
+                    createdFiles.push(`错误: 无法创建目录 "${filename}" (使用mkdir命令)`);
+                    return;
+                }
+
+                // 如果文件已存在，更新内容为空字符串（模拟更新时间戳）
+                // 如果文件不存在，创建空文件
+                if (this.fileSystem.has(fullPath)) {
+                    this.fileSystem.set(fullPath, this.fileSystem.get(fullPath)); // 实际不改变内容，但模拟更新时间
+                    createdFiles.push(`已更新: ${fullPath}`);
+                } else {
+                    this.fileSystem.set(fullPath, "");
+                    createdFiles.push(`已创建: ${fullPath}`);
+                }
+            });
+
+            return createdFiles.join('\n');
+        }
+
+        // ==================== 辅助方法 ====================
+
+        addCommandToHistory(command) {
+            const commandItem = document.createElement('div');
+            commandItem.className = 'command-item';
+            commandItem.innerHTML = `<span class="prompt">${this.currentDir}&gt;</span><span class="command-text">${this.escapeHtml(command)}</span>`;
+            this.commandHistoryEl.appendChild(commandItem);
+        }
+
+        addOutput(output, type = 'output') {
+            if (output === null) return; // 如果返回null，表示已经直接添加了输出
+
+            const outputItem = document.createElement('div');
+            outputItem.className = 'command-item';
+
+            const cssClass = type === 'error' ? 'error-text' : 'output-text';
+            outputItem.innerHTML = `<div class="${cssClass}">${this.formatOutput(output)}</div>`;
+            this.commandHistoryEl.appendChild(outputItem);
+        }
+
+        formatOutput(output) {
+            return this.escapeHtml(output).replace(/\n/g, '<br>');
+        }
+
+        escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        navigateHistory(direction) {
+            if (this.commandHistory.length === 0) return;
+
+            this.historyIndex += direction;
+
+            // 限制索引范围
+            if (this.historyIndex < 0) this.historyIndex = 0;
+            if (this.historyIndex > this.commandHistory.length) this.historyIndex = this.commandHistory.length;
+
+            if (this.historyIndex === this.commandHistory.length) {
+                this.commandInput.value = '';
+            } else {
+                this.commandInput.value = this.commandHistory[this.historyIndex];
+            }
+        }
+
+        autoCompleteCommand() {
+            const input = this.commandInput.value.trim().toLowerCase();
+            if (!input) return;
+            // 处理!命令的自动补全
+            if (input.startsWith('!')) {
+                if (input === '!') {
+                    // 显示可用的!命令格式
+                    this.addCommandToHistory(input);
+                    this.addOutput("!命令格式: !!, !n, !string", 'info');
+                    this.scrollToBottom();
+                    return;
+                }
+
+                const bangArg = input.substring(1);
+
+                // 如果是数字，补全为!n格式
+                if (/^\d+$/.test(bangArg)) {
+                    const index = parseInt(bangArg, 10);
+                    if (index >= 1 && index <= this.commandHistory.length) {
+                        this.commandInput.value = `!${index}`;
+                        // 显示对应的历史命令
+                        const historyItem = document.createElement('div');
+                        historyItem.className = 'command-item output-text';
+                        historyItem.innerHTML = `将执行: ${this.commandHistory[index - 1]}`;
+                        this.commandHistoryEl.appendChild(historyItem);
+                        this.scrollToBottom();
+                    }
+                    return;
+                }
+
+                // 如果是字符串，查找匹配的历史命令
+                const matches = this.commandHistory.filter(cmd =>
+                    cmd.startsWith(bangArg)
+                );
+
+                if (matches.length > 0) {
+                    // 显示匹配的历史命令
+                    const matchText = matches.slice(-3).map(cmd => `  ${cmd}`).join('\n');
+                    this.addCommandToHistory(input);
+                    this.addOutput(`匹配的历史命令:\n${matchText}`, 'info');
+                    this.scrollToBottom();
+                }
+                return;
+            }
+
+            // 查找匹配的命令
+            const matches = Object.keys(this.commands).filter(cmd =>
+                cmd.startsWith(input)
+            );
+
+            if (matches.length === 1) {
+                this.commandInput.value = matches[0];
+            } else if (matches.length > 1) {
+                // 显示匹配的命令
+                const matchText = matches.join(', ');
+                this.addCommandToHistory(input);
+                this.addOutput(`匹配的命令: ${matchText}`, 'output');
+                this.scrollToBottom();
+            }
+        }
+
+        scrollToBottom() {
+            setTimeout(() => {
+                this.outputArea.scrollTop = this.outputArea.scrollHeight;
+            }, 10);
+        }
+    }
+
+    // ==================== 初始化 ====================
+    document.addEventListener('DOMContentLoaded', () => {
+        // 创建DOS系统实例
+        const dos = new DosSystem(CONFIG);
+
+        // 全局访问（用于调试）
+        window.dosSystem = dos;
+
+        console.log("Miyu DOS!");
+    });
+</script>
+</body>
+</html>
