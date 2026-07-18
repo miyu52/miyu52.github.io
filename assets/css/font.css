@@ -1,0 +1,20 @@
+@font-face {
+  font-family: ZhuZiAYuanJWD;
+  src: url(/assets/fonts/ZhuZiAWan.ttf);
+  font-display: swap;
+  font-weight: lighter;
+}
+
+@font-face {
+  font-family: ptsm;
+  src: url(/assets/fonts/ptsm.ttf);
+  font-display: swap;
+  font-weight: lighter;
+}
+
+@font-face {
+  font-family: Chalkboard_SE;
+  src: url(/assets/fonts/ChalkboardSE-Regular.ttf);
+  font-display: swap;
+  font-weight: lighter;
+}
