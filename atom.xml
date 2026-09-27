@@ -6,7 +6,7 @@
   <link href="https://miyu52.github.io/atom.xml" rel="self"/>
   
   <link href="https://miyu52.github.io/"/>
-  <updated>2025-12-23T16:00:00.000Z</updated>
+  <updated>2026-09-27T07:21:09.000Z</updated>
   <id>https://miyu52.github.io/</id>
   
   <author>
@@ -17,27 +17,26 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>模板</title>
-    <link href="https://miyu52.github.io/2025/12/24/template/"/>
-    <id>https://miyu52.github.io/2025/12/24/template/</id>
-    <published>2025-12-23T16:00:00.000Z</published>
-    <updated>2025-12-23T16:00:00.000Z</updated>
+    <title>常用 snippets</title>
+    <link href="https://miyu52.github.io/2026/09/27/snippets/"/>
+    <id>https://miyu52.github.io/2026/09/27/snippets/</id>
+    <published>2026-09-27T07:21:09.000Z</published>
+    <updated>2026-09-27T07:21:09.000Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="文章模板"><a href="#文章模板" class="headerlink" title="文章模板"></a>文章模板</h2><p>这是一个简单的文章模板。</p>]]></content>
+    <content type="html"><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>虽然现在代码都是由 AI 生成，开发环境也能由 AI 管理了，但是描述需求、写 Skills 提示词也是一种烦恼，收藏一下常用的脚本。</p><p>PS：以下脚本也都是 AI 生成，不过都经过我手动多次验证。</p><h2 id="Bash"><a href="#Bash" class="headerlink" title="Bash"></a>Bash</h2><h3 id="批量哈希"><a href="#批量哈希" class="headerlink" title="批量哈希"></a>批量哈希</h3><p>sha256，递归，实时显示</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">( count=0; <span class="keyword">while</span> IFS= <span class="built_in">read</span> -r -d <span class="string">&#x27;&#x27;</span> f; <span class="keyword">do</span> f=<span class="variable">$&#123;f#./&#125;</span>; <span class="keyword">if</span> [ ! -e <span class="string">&quot;<span class="variable">$f</span>.sha256&quot;</span> ] &amp;&amp; [ ! -L <span class="string">&quot;<span class="variable">$f</span>.sha256&quot;</span> ]; <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">&quot;Hashing: <span class="variable">$f</span>&quot;</span>; <span class="keyword">if</span> hash_output=$(<span class="built_in">sha256sum</span> -- <span class="string">&quot;<span class="variable">$f</span>&quot;</span>); <span class="keyword">then</span> <span class="built_in">echo</span> <span class="string">&quot;<span class="variable">$hash_output</span>&quot;</span> &gt; <span class="string">&quot;<span class="variable">$f</span>.sha256&quot;</span>; <span class="built_in">echo</span> <span class="string">&quot;SHA256: <span class="variable">$&#123;hash_output%% *&#125;</span>&quot;</span>; count=$((count+<span class="number">1</span>)); <span class="keyword">else</span> <span class="built_in">echo</span> <span class="string">&quot;Hash failed: <span class="variable">$f</span>&quot;</span>; <span class="built_in">rm</span> -f -- <span class="string">&quot;<span class="variable">$f</span>.sha256&quot;</span>; <span class="keyword">fi</span>; <span class="keyword">fi</span>; <span class="keyword">done</span> &lt; &lt;(find . -<span class="built_in">type</span> f ! -name <span class="string">&#x27;*.sha256&#x27;</span> -print0); <span class="built_in">echo</span> <span class="string">&quot;Hashed count: <span class="variable">$count</span>&quot;</span> )</span><br></pre></td></tr></table></figure><h3 id="查找符号链接和指向"><a href="#查找符号链接和指向" class="headerlink" title="查找符号链接和指向"></a>查找符号链接和指向</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . -<span class="built_in">type</span> l -<span class="built_in">printf</span> <span class="string">&quot;%p -&gt; %l\n&quot;</span> 2&gt;/dev/null</span><br></pre></td></tr></table></figure>]]></content>
     
     
       
       
-    <summary type="html">&lt;h2 id=&quot;文章模板&quot;&gt;&lt;a href=&quot;#文章模板&quot; class=&quot;headerlink&quot; title=&quot;文章模板&quot;&gt;&lt;/a&gt;文章模板&lt;/h2&gt;&lt;p&gt;这是一个简单的文章模板。&lt;/p&gt;
-</summary>
+    <summary type="html">&lt;h2 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h2&gt;&lt;p&gt;虽然现在代码都是由 AI 生成，开发环境也能由 AI 管理了，但是描述需求、写 Skills 提示词也是一种烦恼，收藏一下常用的脚本。&lt;/p</summary>
       
     
     
     
-    <category term="杂项" scheme="https://miyu52.github.io/categories/%E6%9D%82%E9%A1%B9/"/>
+    <category term="代码" scheme="https://miyu52.github.io/categories/%E4%BB%A3%E7%A0%81/"/>
     
     
-    <category term="模板" scheme="https://miyu52.github.io/tags/%E6%A8%A1%E6%9D%BF/"/>
+    <category term="随记" scheme="https://miyu52.github.io/tags/%E9%9A%8F%E8%AE%B0/"/>
     
   </entry>
   
