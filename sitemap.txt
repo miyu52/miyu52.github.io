@@ -2,9 +2,13 @@ https://miyu52.github.io/posts/09XPQ332PI9M3ITM/
 https://miyu52.github.io/tags/index.html
 https://miyu52.github.io/categories/index.html
 https://miyu52.github.io/about/index.html
+https://miyu52.github.io/posts/B5GSES7P6H2XGS9Y/
 https://miyu52.github.io/posts/O37O43OFMAW9VO5V/
 https://miyu52.github.io/
 https://miyu52.github.io/tags/DevOps/
 https://miyu52.github.io/tags/Bash/
 https://miyu52.github.io/tags/Docker/
+https://miyu52.github.io/tags/Language/
+https://miyu52.github.io/tags/Lua/
 https://miyu52.github.io/categories/DevOps/
+https://miyu52.github.io/categories/Language/

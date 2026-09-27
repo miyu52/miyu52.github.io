@@ -1,0 +1,1405 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Lua 完整语法 AIO | Miyu</title><meta name="author" content="Miyu"><meta name="copyright" content="Miyu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100#!lua55-">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lua 完整语法 AIO">
+<meta property="og:url" content="https://miyu52.github.io/posts/B5GSES7P6H2XGS9Y/index.html">
+<meta property="og:site_name" content="Miyu">
+<meta property="og:description" content="123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100#!lua55-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://miyu52.github.io/assets/images/default_cover_1.png">
+<meta property="article:published_time" content="2026-02-28T07:53:00.000Z">
+<meta property="article:modified_time" content="2026-02-28T07:53:00.000Z">
+<meta property="article:author" content="Miyu">
+<meta property="article:tag" content="Language">
+<meta property="article:tag" content="Lua">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://miyu52.github.io/assets/images/default_cover_1.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Lua 完整语法 AIO",
+  "url": "https://miyu52.github.io/posts/B5GSES7P6H2XGS9Y/",
+  "image": "https://miyu52.github.io/assets/images/default_cover_1.png",
+  "datePublished": "2026-02-28T07:53:00.000Z",
+  "dateModified": "2026-02-28T07:53:00.000Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Miyu",
+      "url": "https://miyu52.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/assets/images/favicon.ico"><link rel="canonical" href="https://miyu52.github.io/posts/B5GSES7P6H2XGS9Y/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/assets/css/fontawesome-free-7.1.0.all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!true && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200,"highlightFullpage":true,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Lua 完整语法 AIO',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/assets/css/font.css"><link rel="stylesheet" href="/assets/css/custom.css"><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Miyu" type="application/atom+xml">
+</head><body><script>window.paceOptions = {
+  restartOnPushState: false
+}
+
+btf.addGlobalFn('pjaxSend', () => {
+  Pace.restart()
+}, 'pace_restart')
+
+</script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js/themes/blue/pace-theme-minimal.min.css"/><script src="https://cdn.jsdelivr.net/npm/pace-js/pace.min.js"></script><div class="bg-animation" id="web_bg" style="background-image: url(/assets/images/background.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/assets/images/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/assets/images/default_cover_1.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Miyu</span></a><a class="nav-page-title" href="/"><span class="site-name">Lua 完整语法 AIO</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-circle-info"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Lua 完整语法 AIO</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-02-28T07:53:00.000Z" title="发表于 2026-02-28 15:53:00">2026-02-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-02-28T07:53:00.000Z" title="更新于 2026-02-28 15:53:00">2026-02-28</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Language/">Language</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">13.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>47分钟</span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line">#!lua55</span><br><span class="line"><span class="comment">-- 8种类型</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(<span class="literal">nil</span>))                                <span class="comment">-- nil</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(<span class="literal">true</span>))                               <span class="comment">-- boolean</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(<span class="number">1</span>))                                  <span class="comment">-- number</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(<span class="string">&quot;&quot;</span>))                                 <span class="comment">-- string</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span><span class="keyword">end</span>))                      <span class="comment">-- function</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;userdata&quot;</span>)                               <span class="comment">-- userdata</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(<span class="built_in">coroutine</span>.<span class="built_in">create</span>(<span class="function"><span class="keyword">function</span><span class="params">()</span></span><span class="keyword">end</span>)))    <span class="comment">-- thread</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">type</span>(&#123;&#125;))                                 <span class="comment">-- table</span></span><br><span class="line"></span><br><span class="line">global&lt;const&gt; *</span><br><span class="line">global *</span><br><span class="line">global GVar = <span class="string">&quot;Global&quot;</span></span><br><span class="line"><span class="keyword">local</span> lVar = <span class="string">&quot;Local&quot;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">_ENV</span>.GVar)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">_G</span>.GVar)</span><br><span class="line"></span><br><span class="line"><span class="keyword">local</span> x, y = <span class="number">1</span>, <span class="number">2</span></span><br><span class="line">y, x = x, y</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 显示块</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="comment">-- do nothing</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- if</span></span><br><span class="line"><span class="keyword">local</span> flag = <span class="number">1</span></span><br><span class="line"><span class="keyword">if</span> flag == <span class="number">1</span> <span class="keyword">and</span> <span class="literal">true</span> <span class="keyword">and</span> (<span class="keyword">not</span> <span class="literal">false</span>) <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;flag = 1&#x27;</span>)</span><br><span class="line"><span class="keyword">elseif</span> flag == <span class="number">2</span> <span class="keyword">or</span> <span class="literal">false</span> <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;flag = 2&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;flag unknown&#x27;</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- while</span></span><br><span class="line"><span class="keyword">local</span> whileVar = <span class="number">5</span></span><br><span class="line"><span class="keyword">while</span> whileVar &gt; <span class="number">0</span> <span class="keyword">do</span></span><br><span class="line">    whileVar = whileVar - <span class="number">1</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- repeat</span></span><br><span class="line"><span class="keyword">local</span> repeatVar = <span class="number">5</span></span><br><span class="line"><span class="keyword">repeat</span></span><br><span class="line">    repeatVar = repeatVar - <span class="number">1</span></span><br><span class="line"><span class="keyword">until</span> repeatVar &lt;= <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- for</span></span><br><span class="line"><span class="keyword">for</span> idx = <span class="number">1</span>, <span class="number">10</span>, <span class="number">1</span> <span class="keyword">do</span></span><br><span class="line">    <span class="comment">-- 1..10</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">for</span> idx, value <span class="keyword">in</span> <span class="built_in">ipairs</span>(&#123;[<span class="number">1</span>]=<span class="number">1</span>,[<span class="number">2</span>]=<span class="number">2</span>&#125;) <span class="keyword">do</span></span><br><span class="line">    <span class="comment">-- 1=1, 2=2</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> <span class="built_in">pairs</span>(&#123;a=<span class="number">1</span>,b=<span class="number">2</span>&#125;) <span class="keyword">do</span></span><br><span class="line">    <span class="comment">-- 1=1, 2=2</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- goto</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">goto</span> label</span><br><span class="line">    <span class="comment">-- skip</span></span><br><span class="line">    ::label::</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- break</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">true</span> <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">repeat</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line"><span class="keyword">until</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- return</span></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">fn</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- table</span></span><br><span class="line">global Cls = &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cls:new</span><span class="params">()</span></span></span><br><span class="line">    <span class="built_in">self</span>.<span class="built_in">__index</span> = <span class="built_in">self</span></span><br><span class="line">    obj = &#123;&#125;</span><br><span class="line">    <span class="built_in">setmetatable</span>(obj, <span class="built_in">self</span>)</span><br><span class="line">    <span class="keyword">return</span> obj</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cls:method</span><span class="params">()</span></span> <span class="comment">-- function Cls.method(self)</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;method&#x27;</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cls.func</span><span class="params">()</span></span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;func&#x27;</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Cls.__call</span><span class="params">(obj)</span></span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;call&#x27;</span>)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">local</span> cls = Cls:new()</span><br><span class="line">cls:method() <span class="comment">-- Cls.method(Cls)</span></span><br><span class="line">cls.func()</span><br><span class="line">cls()</span><br></pre></td></tr></table></figure>
+
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="值和类型"><a href="#值和类型" class="headerlink" title="值和类型"></a>值和类型</h3><p>Lua 是一种动态类型语言，变量没有类型，只有值有类型。</p>
+<p>Lua 中的所有值都是第一类值。这意味着所有值都可以存储在变量中，作为参数传递给其他函数，并作为结果返回。</p>
+<p>八种基本类型：<code>nil</code>、<code>boolean</code>(<code>true</code>, <code>false</code>)、<code>number</code>(<code>int x64</code>, <code>float x64</code>)、<code>string</code>、<code>function</code>、<code>userdata</code>、<code>thread</code> 和 <code>table</code>。</p>
+<p>假值：<code>nil</code> 和 <code>false</code>。</p>
+<p>类型 <code>number</code> 使用两个子类型表示整数和实数（浮点数）：<code>integer</code> 和 <code>float</code>。标准 Lua 使用 64 位整数和双精度（64 位）浮点数，但你也可以编译 Lua，使其使用 32 位整数和&#x2F;或单精度（32 位）浮点数。对于小型机器和嵌入式系统来说，整数和浮点数都使用 32 位的选项特别有吸引力。（参见文件 <code>luaconf.h</code> 中的宏 <code>LUA_32BITS</code>。）</p>
+<p>除非另有说明，操作整数值时，任何溢出都将根据二进制补码算术的通常规则环绕。（换句话说，实际结果是唯一的、可表示的整数，其模 <code>2^n</code> 等于数学结果，其中 <code>n</code> 是整数类型的位数。）</p>
+<p>Lua 对何时使用每个子类型有明确的规则，但它也会根据需要自动在它们之间进行转换。因此，程序员可以选择大部分忽略整数和浮点数之间的差异，或者对每个数字的表示进行完全控制。</p>
+<p>类型 <code>string</code> 表示不可变的字节序列。字符串可以包含任何 8 位值，包括嵌入的零（’<code>\0</code>‘）。Lua 也与编码无关；它不假定字符串的内容。Lua 中任何字符串的长度必须适合 Lua 整数，并且字符串加上一个小标头必须适合 <code>size_t</code>。</p>
+<p>Lua 可以调用（和操作）用 Lua 编写的函数和用 C 编写的函数。两者都由类型 <code>function</code> 表示。</p>
+<p>类型 <code>userdata</code> 用于允许任意 C 数据存储在 Lua 变量中。<code>userdata</code> 值表示一块原始内存。有两种 <code>userdata</code>：完整 <code>userdata</code>，它是一个由 Lua 管理内存块的对象，以及轻量 <code>userdata</code>，它只是一个 C 指针值。<code>userdata</code> 在 Lua 中没有预定义的操作，除了赋值和身份测试。通过使用元表，程序员可以为完整 <code>userdata</code> 值定义操作。<code>userdata</code> 值不能在 Lua 中创建或修改，只能通过 C API。这保证了宿主程序和 C 库所拥有数据的完整性。</p>
+<p>类型 <code>thread</code> 表示独立的执行线程，用于实现协程。Lua 线程与操作系统线程无关。Lua 在所有系统上都支持协程，即使那些不原生支持线程的系统。</p>
+<p>类型 <code>table</code> 实现关联数组，也就是说，其索引不仅可以是数字，还可以是除了 <code>nil</code> 和 NaN 之外的任何 Lua 值。（<em>Not a Number</em> 是 IEEE 754 标准用于表示未定义数值结果（例如 <code>0/0</code>）的特殊浮点值。）表可以是异构的；也就是说，它们可以包含所有类型的值（除了 <code>nil</code>）。任何关联到值 <code>nil</code> 的键都不被视为表的一部分。相反，任何不属于表的键都具有关联值 <code>nil</code>。</p>
+<p>表是 Lua 中唯一的构建数据机制；它们可以用于表示普通数组、列表、符号表、集合、记录、图、树等。为了表示记录，Lua 使用字段名作为索引。该语言通过提供 <code>a.name</code> 作为 <code>a[&quot;name&quot;]</code> 的语法糖来支持这种表示。在 Lua 中有几种方便的创建表的方法。</p>
+<p>与索引类似，表字段的值可以是任何类型。特别是，由于函数是第一类值，表字段可以包含函数。因此，表也可以携带方法。</p>
+<p>表的索引遵循语言中原始相等性的定义。表达式 <code>a[i]</code> 和 <code>a[j]</code> 指的是同一个表元素，当且仅当 <code>i</code> 和 <code>j</code> 原始相等（即，没有元方法时相等）。特别是，具有整数值的浮点数与其各自的整数相等（例如，<code>1.0 == 1</code>）。为避免歧义，任何用作键且等于整数的浮点数都将被转换为该整数。例如，如果你写入 <code>a[2.0] = true</code>，实际插入表中的键将是整数 <code>2</code>。</p>
+<p>表、函数、线程和（完整）<code>userdata</code> 值都是对象：变量实际上不包含这些值，只包含对它们的引用。赋值、参数传递和函数返回总是操作这些值的引用；这些操作不涉及任何形式的复制。</p>
+<p>库函数 <code>type</code> 返回一个描述给定值的类型的字符串。</p>
+<h3 id="作用域、变量"><a href="#作用域、变量" class="headerlink" title="作用域、变量"></a>作用域、变量</h3><p>变量名根据代码该点上下文中的声明引用全局变量或局部变量。（为了讨论的目的，函数的形参等同于一个局部变量。）</p>
+<p>所有代码块都以隐式声明 <code>global *</code> 开始，该声明将所有自由名称声明为全局变量；此序言声明在任何其他 <code>global</code> 声明的作用域内失效。</p>
+<p>因此，在任何全局声明之外，Lua 默认为全局变量。在任何全局声明之内，Lua 不设置默认值：所有变量都必须声明。</p>
+<p>Lua 是一种词法作用域语言。变量声明的作用域从声明后的第一条语句开始，持续到包含该声明的最内层块的最后一个非空语句。（空语句是标签和空语句。）</p>
+<p>声明会遮蔽在声明点上下文中具有相同名称的任何声明。在此遮蔽内部，该名称的任何外部声明均无效。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">x = <span class="number">10</span>                <span class="comment">-- 全局变量</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="comment">-- 代码块</span></span><br><span class="line">    <span class="keyword">local</span> x = x         <span class="comment">-- 局部变量</span></span><br><span class="line">    <span class="built_in">print</span>(x)            <span class="comment">--&gt; 10</span></span><br><span class="line">    x = x + <span class="number">1</span></span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">        <span class="comment">-- 代码块</span></span><br><span class="line">        <span class="keyword">local</span> x = x + <span class="number">1</span>     <span class="comment">-- 局部变量</span></span><br><span class="line">        <span class="built_in">print</span>(x)          <span class="comment">--&gt; 12</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line">    <span class="built_in">print</span>(x)            <span class="comment">--&gt; 11</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="built_in">print</span>(x)              <span class="comment">--&gt; 10</span></span><br></pre></td></tr></table></figure>
+
+<p>在像 <code>local x = x</code> 这样的声明中，正在声明的新 <code>x</code> 尚未在作用域内，因此右侧的 <code>x</code> 指的是外部变量。</p>
+<p>由于词法作用域规则，局部变量可以被其作用域内定义的函数自由访问。内部函数使用的局部变量在内部函数内部称为上值（或外部局部变量，或简称外部变量）。</p>
+<h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>对全局变量 <code>var</code> 的任何引用在语法上都会转换为 <code>_ENV.var</code>。每个代码块都在一个名为 <code>_ENV</code> 的外部局部变量的作用域内编译，因此 <code>_ENV</code> 本身在一个代码块中从不是一个自由名称。</p>
+<p>尽管存在这个外部 <code>_ENV</code> 变量和自由名称的转换，<code>_ENV</code> 仍然是一个常规名称。特别是，可以使用这个名称定义新的变量和参数。（但是不应该将 <code>_ENV</code> 定义为全局变量，否则 <code>_ENV.var</code> 将转换为 <code>_ENV._ENV.var</code>，依此类推，进入无限循环。）对全局变量名称的每次引用都使用程序在该点可见的 <code>_ENV</code>。</p>
+<p>任何用作 <code>_ENV</code> 值的表都称为环境。</p>
+<p>当 Lua 加载一个代码块时，其 <code>_ENV</code> 变量的默认值是全局环境，全局变量 <code>_G</code> 使用相同的值进行初始化。默认情况下，Lua 代码中的全局变量引用全局环境中的条目，并因此充当传统的全局变量。</p>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p>Lua 中的操作可能会引发错误。错误会中断程序的正常流程，程序可以通过捕获错误来继续。</p>
+<p>Lua 代码可以通过调用 <code>error</code> 函数明确地引发错误。（此函数永不返回。）</p>
+<p>在 Lua 中捕获错误，需要进行受保护调用，使用 <code>pcall</code>（或 <code>xpcall</code>）。函数 <code>pcall</code> 在受保护模式下调用给定函数。在运行函数期间发生的任何错误都会停止其执行，并将控制立即返回给 <code>pcall</code>，<code>pcall</code> 返回一个状态码。</p>
+<p>由于 Lua 是一种嵌入式扩展语言，Lua 代码通过宿主程序中的 C 代码调用开始运行。（当你独立使用 Lua 时，<code>lua</code> 应用程序就是宿主程序。）通常，此调用是受保护的；因此，当在 Lua 代码块的编译或执行期间发生一个不受保护的错误时，控制会返回给宿主，宿主可以采取适当的措施，例如打印错误消息。</p>
+<p>当您使用 <a target="_blank" rel="noopener" href="https://docs.moyiliu.com/lua-5.5/manual.html#pdf-xpcall"><code>xpcall</code></a>（或 C 语言中的 <a target="_blank" rel="noopener" href="https://docs.moyiliu.com/lua-5.5/manual.html#lua_pcall"><code>lua_pcall</code></a>）时，您可以提供一个消息处理程序，以便在发生错误时调用。此函数将接收原始错误对象作为参数并返回一个新的错误对象。</p>
+<h3 id="元表和元方法"><a href="#元表和元方法" class="headerlink" title="元表和元方法"></a>元表和元方法</h3><p>Lua 中的每个值都可以有一个元表。这个元表是一个普通的 Lua 表，定义了原始值在某些事件下的行为。</p>
+<p>可以通过在其元表中设置特定字段来更改值的行为。</p>
+<p>对于大多数事件，对应的元表值必须是一个函数，该函数被称为元方法。</p>
+<p>可以使用 <code>getmetatable</code> 函数查询任何值的元表。Lua 使用原始访问（参见 <code>rawget</code>）在元表中查询元方法。</p>
+<p>可以使用 <code>setmetatable</code> 函数替换表的元表。你无法从 Lua 代码中更改其他类型的元表，除非使用调试库。</p>
+<p><code>table</code> 和完整 <code>userdata</code> 具有各自的元表，尽管多个 <code>table</code> 和 <code>userdata</code> 可以共享它们的元表。所有其他类型的值共享每种类型的一个单一元表；例如，所有数字共享一个单一元表，所有字符串共享一个，等等。默认情况下，一个值没有元表，但是字符串库为字符串类型设置了一个元表。</p>
+<p><strong>元表控制的操作的详细表格</strong></p>
+<table>
+<thead>
+<tr>
+<th>事件</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>__add</code></td>
+<td>加法（<code>+</code>）操作</td>
+</tr>
+<tr>
+<td><code>__sub</code></td>
+<td>减法（<code>-</code>）操作</td>
+</tr>
+<tr>
+<td><code>__mul</code></td>
+<td>乘法（<code>*</code>）操作</td>
+</tr>
+<tr>
+<td><code>__div</code></td>
+<td>除法（<code>/</code>）操作</td>
+</tr>
+<tr>
+<td><code>__mod</code></td>
+<td>模数（<code>%</code>）操作</td>
+</tr>
+<tr>
+<td><code>__pow</code></td>
+<td>幂（<code>^</code>）操作</td>
+</tr>
+<tr>
+<td><code>__unm</code></td>
+<td>取反（一元 <code>-</code>）操作</td>
+</tr>
+<tr>
+<td><code>__idiv</code></td>
+<td>整除（<code>//</code>）操作</td>
+</tr>
+<tr>
+<td><code>__band</code></td>
+<td>按位与（<code>&amp;</code>）操作</td>
+</tr>
+<tr>
+<td><code>__bor</code></td>
+<td>按位或（&#96;</td>
+</tr>
+<tr>
+<td><code>__bxor</code></td>
+<td>按位异或（二进制 <code>~</code>）操作</td>
+</tr>
+<tr>
+<td><code>__bnot</code></td>
+<td>按位非（一元 <code>~</code>）操作</td>
+</tr>
+<tr>
+<td><code>__shl</code></td>
+<td>按位左移（<code>&lt;&lt;</code>）操作</td>
+</tr>
+<tr>
+<td><code>__shr</code></td>
+<td>按位右移（<code>&gt;&gt;</code>）操作</td>
+</tr>
+<tr>
+<td><code>__concat</code></td>
+<td>连接（<code>..</code>）操作</td>
+</tr>
+<tr>
+<td><code>__len</code></td>
+<td>长度（<code>#</code>）操作</td>
+</tr>
+<tr>
+<td><code>__eq</code></td>
+<td>相等（<code>==</code>）操作</td>
+</tr>
+<tr>
+<td><code>__lt</code></td>
+<td>小于（<code>&lt;</code>）操作</td>
+</tr>
+<tr>
+<td><code>__le</code></td>
+<td>小于等于（<code>&lt;=</code>）操作</td>
+</tr>
+<tr>
+<td><code>__index</code></td>
+<td>索引访问操作 <code>table[key]</code>；可以是函数、表或任何具有 <code>__index</code> 元值的值。</td>
+</tr>
+<tr>
+<td><code>__newindex</code></td>
+<td>索引赋值 <code>table[key] = value</code>；元值可以是函数、表或任何具有 <code>__newindex</code> 元值的值。<br />每当调用 <code>__newindex</code> 元值时，Lua 不会执行原始赋值。如果需要，元方法本身可以调用 <code>rawset</code> 来执行赋值。</td>
+</tr>
+<tr>
+<td><code>__call</code></td>
+<td>调用操作 <code>func(args)</code></td>
+</tr>
+<tr>
+<td><code>__gc</code></td>
+<td>对象垃圾回收终结器</td>
+</tr>
+<tr>
+<td><code>__close</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>__mode</code></td>
+<td>弱表</td>
+</tr>
+<tr>
+<td><code>__name</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h3><p>Lua 执行自动内存管理，这意味着你不必担心为新对象分配内存或在不再需要对象时释放内存。</p>
+<p>Lua 中的垃圾回收器（GC）可以工作在两种模式下：增量式和分代式。</p>
+<p>默认 GC 模式和默认参数足以满足大多数用途。</p>
+<p>GC 行为在不同平台和不同 Lua 版本之间都是不可移植的；因此，最佳设置也是不可移植的。</p>
+<p>可以通过在 C 中调用 <code>lua_gc</code> 或在 Lua 中调用 <code>collectgarbage</code> 来更改 GC 模式和参数。</p>
+<h3 id="弱表"><a href="#弱表" class="headerlink" title="弱表"></a>弱表</h3><p>弱表是一个其元素为弱引用的表。弱引用被垃圾回收器忽略，换句话说，如果对对象的唯一引用是弱引用，那么垃圾回收器将回收该对象。</p>
+<p>弱表可以有弱键、弱值或两者皆有。具有弱值的表允许回收其值，但阻止回收其键。具有弱键和弱值的表允许回收键和值。在任何情况下，如果键或值被回收，整个对将从表中移除。</p>
+<p>表的弱性由其元表的 <code>__mode</code> 字段控制。如果存在，此元值必须是以下字符串之一：”<code>k</code>“，表示具有弱键的表；”<code>v</code>“，表示具有弱值的表；或 “<code>kv</code>“，表示同时具有弱键和弱值的表。</p>
+<p>一个具有弱键和强值的表也被称为暂时表。在暂时表中，一个值仅当其键可达时才被认为是可达的。特别是，如果对键的唯一引用是通过其值，则该对将被移除。</p>
+<p>表中弱性发生的任何更改可能只在下一个收集周期才生效。如果您将弱性更改为更强的模式，Lua 仍可能在该更改生效之前从该表中收集一些项目。</p>
+<p>只有具有显式构造的对象才会从弱表中移除。像数字和轻量 C 函数这样的值不受垃圾回收的影响，因此不会从弱表中移除（除非它们的关联值被回收）。尽管字符串受垃圾回收的影响，但它们没有显式构造，并且它们的相等性是按值判断的；它们的行为更像值而不是对象。因此，它们不会从弱表中移除。</p>
+<p>复活对象（即正在终结的对象以及仅通过正在终结的对象可访问的对象）在弱表中具有特殊行为。它们在运行其终结器之前从弱值中移除，但仅在其终结器运行后的下一次回收中从弱键中移除，此时这些对象才真正被释放。这种行为允许终结器通过弱表访问与对象关联的属性。</p>
+<p>如果一个弱表在收集周期中属于被复活的对象之一，它可能直到下一个周期才会被正确清除。</p>
+<h3 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h3><p>Lua 支持协程，也称为协作式多线程。Lua 中的协程表示一个独立的执行线程。然而，与多线程系统中的线程不同，协程仅通过显式调用一个 <code>yield</code> 函数来挂起其执行。</p>
+<p>通过调用 <code>coroutine.create</code> 来创建协程（不启动）。它唯一的参数是一个函数，该函数是协程的主函数。<code>create</code> 函数只创建一个新的协程并返回一个对其的句柄（一个类型为 <code>thread</code> 的对象）。</p>
+<p>通过调用 <code>coroutine.resume</code> 来执行协程。当第一次调用 <code>coroutine.resume</code>，将 <code>coroutine.create</code> 返回的线程作为其第一个参数传递时，协程通过调用其主函数开始执行。传递给 <code>coroutine.resume</code> 的额外参数将作为参数传递给该函数。协程开始运行后，它会一直运行直到终止或让出。</p>
+<p>协程可以通过两种方式终止执行：正常终止，当其主函数返回时（显式或隐式，在最后一条指令之后）；异常终止，如果发生不受保护的错误。在正常终止的情况下，<code>coroutine.resume</code> 返回 <code>true</code>，以及协程主函数返回的任何值。在发生错误的情况下，<code>coroutine.resume</code> 返回 <strong>false</strong> 加上错误对象。在这种情况下，协程不会展开其栈，因此可以在错误发生后使用调试 API 检查它。</p>
+<p>协程通过调用 <code>coroutine.yield</code> 来让出。当一个协程让出时，相应的 <code>coroutine.resume</code> 会立即返回，即使让出发生在嵌套函数调用内部（即，不在主函数中，而是在主函数直接或间接调用的函数中）。在让出的情况下，<code>coroutine.resume</code> 也返回 <strong>true</strong>，以及传递给 <code>coroutine.yield</code> 的任何值。下一次您恢复同一个协程时，它将从让出点继续执行，调用 <code>coroutine.yield</code> 返回传递给 <code>coroutine.resume</code> 的任何额外参数。</p>
+<p>与 <code>coroutine.create</code> 类似，<code>coroutine.wrap</code> 函数也创建协程，但它不返回协程本身，而是返回一个函数，该函数在被调用时恢复协程。传递给此函数的任何参数都将作为额外参数传递给 <code>coroutine.resume</code>。<code>coroutine.wrap</code> 返回 <code>coroutine.resume</code> 返回的所有值，除了第一个（布尔错误码）。与 <code>coroutine.resume</code> 不同，由 <code>coroutine.wrap</code> 创建的函数会将任何错误传播给调用者。在这种情况下，该函数还会关闭协程（参见 <code>coroutine.close</code>）。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span> <span class="params">(a)</span></span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;foo&quot;</span>, a)</span><br><span class="line"><span class="keyword">return</span> <span class="built_in">coroutine</span>.<span class="built_in">yield</span>(<span class="number">2</span>*a)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">co = <span class="built_in">coroutine</span>.<span class="built_in">create</span>(<span class="function"><span class="keyword">function</span> <span class="params">(a,b)</span></span></span><br><span class="line">   <span class="built_in">print</span>(<span class="string">&quot;co-body&quot;</span>, a, b)</span><br><span class="line">   <span class="keyword">local</span> r = foo(a+<span class="number">1</span>)</span><br><span class="line">   <span class="built_in">print</span>(<span class="string">&quot;co-body&quot;</span>, r)</span><br><span class="line">   <span class="keyword">local</span> r, s = <span class="built_in">coroutine</span>.<span class="built_in">yield</span>(a+b, a-b)</span><br><span class="line">   <span class="built_in">print</span>(<span class="string">&quot;co-body&quot;</span>, r, s)</span><br><span class="line">   <span class="keyword">return</span> b, <span class="string">&quot;end&quot;</span></span><br><span class="line"><span class="keyword">end</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;main&quot;</span>, <span class="built_in">coroutine</span>.<span class="built_in">resume</span>(co, <span class="number">1</span>, <span class="number">10</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;main&quot;</span>, <span class="built_in">coroutine</span>.<span class="built_in">resume</span>(co, <span class="string">&quot;r&quot;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;main&quot;</span>, <span class="built_in">coroutine</span>.<span class="built_in">resume</span>(co, <span class="string">&quot;x&quot;</span>, <span class="string">&quot;y&quot;</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;main&quot;</span>, <span class="built_in">coroutine</span>.<span class="built_in">resume</span>(co, <span class="string">&quot;x&quot;</span>, <span class="string">&quot;y&quot;</span>))</span><br><span class="line"><span class="comment">--[[</span></span><br><span class="line"><span class="comment">co-body	1	10</span></span><br><span class="line"><span class="comment">foo	2</span></span><br><span class="line"><span class="comment">main	true	4</span></span><br><span class="line"><span class="comment">co-body	r</span></span><br><span class="line"><span class="comment">main	true	11	-9</span></span><br><span class="line"><span class="comment">co-body	x	y</span></span><br><span class="line"><span class="comment">main	true	10	end</span></span><br><span class="line"><span class="comment">main	false	cannot resume dead coroutine</span></span><br><span class="line"><span class="comment">]]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><h3 id="词法约定"><a href="#词法约定" class="headerlink" title="词法约定"></a>词法约定</h3><p>以下关键字是保留的，不能用作名称：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">and       break     do        else      elseif    end</span><br><span class="line">false     for       function  global    goto      if</span><br><span class="line">in        local     nil       not       or        repeat</span><br><span class="line">return    then      true      until     while</span><br></pre></td></tr></table></figure>
+
+<p>其它符号</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+     -     *     /     %     ^     #</span><br><span class="line">&amp;     ~     |     &lt;&lt;    &gt;&gt;    //</span><br><span class="line">==    ~=    &lt;=    &gt;=    &lt;     &gt;     =</span><br><span class="line">(     )     &#123;     &#125;     [     ]     ::</span><br><span class="line">;     :     ,     .     ..    ...</span><br></pre></td></tr></table></figure>
+
+<h3 id="字面值"><a href="#字面值" class="headerlink" title="字面值"></a>字面值</h3><p><strong>字面字符串</strong></p>
+<p>可以用匹配的单引号或双引号括起来，并且可以包含以下 C 风格的转义序列：’<code>\a</code>‘ (响铃), ‘<code>\b</code>‘ (退格), ‘<code>\f</code>‘ (换页), ‘<code>\n</code>‘ (换行), ‘<code>\r</code>‘ (回车), ‘<code>\t</code>‘ (水平制表符), ‘<code>\v</code>‘ (垂直制表符), ‘<code>\\</code>‘ (反斜杠), ‘<code>\&quot;</code>‘ (引号 [双引号]), 和 ‘<code>\&#39;</code>‘ (撇号 [单引号])。反斜杠后跟换行符会在字符串中产生换行。转义序列 ‘<code>\z</code>‘ 跳过随后的空白字符序列，包括换行符；它特别有助于将长字面字符串拆分并缩进为多行，而无需将换行符和空格添加到字符串内容中。短字面字符串不能包含未转义的换行符或不构成有效转义序列的转义。</p>
+<p>可以在短字面字符串中指定任何字节，包括嵌入的零，通过其数值。这可以通过转义序列 <code>\xXX</code> 完成，其中 <code>XX</code> 是两个十六进制数字的序列，或者通过转义序列 <code>\ddd</code> 完成，其中 <code>ddd</code> 是最多三个十进制数字的序列。（请注意，如果十进制转义序列后跟一个数字，则必须使用恰好三个数字表示。）</p>
+<p>Unicode 字符的 UTF-8 编码可以通过转义序列 <code>\u&#123;XXX&#125;</code>（必须包含大括号）插入到字面字符串中，其中 <code>XXX</code> 是一个或多个十六进制数字的序列，表示字符码点。此码点可以是小于 <code>2^31</code> 的任何值。（Lua 在此使用原始的 UTF-8 规范，该规范不受限于有效的 Unicode 码点。）</p>
+<p>也可以使用由长方括号括起来的长格式定义。我们将级别 n 的开放长方括号定义为一个开放方括号，后跟 n 个等号，再后跟另一个开放方括号。因此，级别 0 的开放长方括号写为 <code>[[</code>，级别 1 的开放长方括号写为 <code>[=[</code>，依此类推。关闭长方括号的定义类似；例如，级别 4 的关闭长方括号写为 <code>]====]</code>。长字面量以任何级别的开放长方括号开始，并在同一级别的第一个关闭长方括号处结束。它可以包含任何文本，但不能包含同一级别的关闭方括号。这种括号形式的字面量可以跨越多行，不解释任何转义序列，并忽略任何其他级别的长方括号。任何形式的行尾序列（回车、换行、回车后跟换行，或换行后跟回车）都转换为简单的换行符。当开放长方括号紧跟换行符时，该换行符不包含在字符串中。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- &#x27;a&#x27; 编码为 97，换行符编码为 10，&#x27;1&#x27; 编码为 49，以下五个字面字符串表示相同的字符串</span></span><br><span class="line"></span><br><span class="line">a = <span class="string">&#x27;alo\n123&quot;&#x27;</span></span><br><span class="line">a = <span class="string">&quot;alo\n123\&quot;&quot;</span></span><br><span class="line">a = <span class="string">&#x27;\97lo\10\04923&quot;&#x27;</span></span><br><span class="line">a = <span class="string">[[alo</span></span><br><span class="line"><span class="string">123&quot;]]</span></span><br><span class="line">a = <span class="string">[==[</span></span><br><span class="line"><span class="string">alo</span></span><br><span class="line"><span class="string">123&quot;]==]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>数值常量</strong></p>
+<p>可以写成带有可选小数部分和可选十进制指数的形式，用字母 ‘<code>e</code>‘ 或 ‘<code>E</code>‘ 标记。Lua 也接受十六进制常量，以 <code>0x</code> 或 <code>0X</code> 开头。十六进制常量也接受可选的小数部分加上可选的二进制指数，用字母 ‘<code>p</code>‘ 或 ‘<code>P</code>‘ 标记并以十进制书写。（例如，<code>0x1.fp10</code> 表示 1984，即 <code>0x1f / 16</code> 乘以 <code>2^10</code>。）</p>
+<p>带有小数点或指数的数值常量表示浮点数；否则，如果其值适合整数或为十六进制常量，则表示整数；否则（即十进制整数数值溢出），表示浮点数。不带小数点和指数的十六进制数值始终表示整数值；如果值溢出，它会环绕以适应有效整数。</p>
+<p>有效整数常量的示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3   345   0xff   0xBEBADA</span><br></pre></td></tr></table></figure>
+
+<p>有效浮点常量的示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">3.0     3.1416     314.16e-2     0.31416E1     34e1</span><br><span class="line">0x0.1E  0xA23p-4   0X1.921FB54442D18P+1</span><br></pre></td></tr></table></figure>
+
+<h3 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h3><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 单行注释</span></span><br><span class="line"><span class="comment">--[[ </span></span><br><span class="line"><span class="comment">   多行注释</span></span><br><span class="line"><span class="comment">   可以跨行</span></span><br><span class="line"><span class="comment">]]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>变量是存储值的地方。Lua 中有三种变量：全局变量、局部变量和表字段。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = <span class="number">1</span> <span class="comment">-- 全局变量x</span></span><br><span class="line"><span class="keyword">local</span> y = <span class="number">2</span> <span class="comment">-- 局部变量y</span></span><br><span class="line">_ = &#123; [<span class="string">&quot;z&quot;</span>] = <span class="number">3</span> &#125; <span class="comment">-- 表字段z</span></span><br><span class="line"><span class="built_in">print</span>(x, y, _[<span class="string">&quot;z&quot;</span>]) <span class="comment">-- 1	2	3</span></span><br></pre></td></tr></table></figure>
+
+<p>在对变量进行第一次赋值之前，它的值为 <strong>nil</strong>。</p>
+<p>方括号用于索引表，语法 <code>var.Name</code> 只是 <code>var[&quot;Name&quot;]</code> 的语法糖。</p>
+<p>对全局变量 <code>x</code> 的访问等同于 <code>_ENV.x</code>。</p>
+<h3 id="块"><a href="#块" class="headerlink" title="块"></a>块</h3><p>块是按顺序执行的语句列表，Lua 具有空语句，允许使用分号分隔语句，用分号开始一个块，或者连续写入两个分号。</p>
+<p>最好始终在以括号开头的语句前加分号，分号解决歧义</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a = b + c</span><br><span class="line">(<span class="built_in">print</span>)(<span class="string">&#x27;done&#x27;</span>) <span class="comment">-- 等价于a = b + c(print)(&#x27;done&#x27;)</span></span><br><span class="line"></span><br><span class="line">a = b + c; (<span class="built_in">print</span> <span class="keyword">or</span> <span class="built_in">io</span>.<span class="built_in">write</span>)(<span class="string">&#x27;done&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>显式块</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> <span class="comment">--[[block]]</span> <span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="代码块"><a href="#代码块" class="headerlink" title="代码块"></a>代码块</h3><p>Lua 的编译单元称为代码块，Lua 将代码块视为一个匿名函数的主体，该函数具有可变数量的参数，因此，代码块可以定义局部变量、接收参数和返回值。此外，这样的匿名函数是在一个名为 <code>_ENV</code> 的外部局部变量的作用域内编译的，生成的函数始终将 <code>_ENV</code> 作为其唯一的外部变量，即使它不使用该变量。</p>
+<p>一个代码块可以存储在一个文件或宿主程序中的字符串中。要执行一个代码块，Lua 首先 <em>加载</em> 它，将代码块的代码预编译成虚拟机指令，然后 Lua 用虚拟机的解释器执行编译后的代码。</p>
+<p>代码块也可以预编译成二进制形式；有关详细信息，请参阅程序 <code>luac</code> 和函数 <code>string.dump</code>。源代码和编译形式的程序是可互换的；Lua 会自动检测文件类型并采取相应行动（参见 <code>load</code>）。请注意，与源代码不同，恶意制作的二进制代码块可能会使解释器崩溃。</p>
+<h3 id="赋值"><a href="#赋值" class="headerlink" title="赋值"></a>赋值</h3><p>Lua 允许多重赋值。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- varlist ::= var &#123;&#x27;,&#x27; var&#125;</span></span><br><span class="line"><span class="comment">-- explist ::= exp &#123;&#x27;,&#x27; exp&#125;</span></span><br><span class="line"><span class="comment">-- varlist &#x27;=&#x27; explist</span></span><br><span class="line">i = <span class="number">3</span></span><br><span class="line">i, a[i] = i+<span class="number">1</span>, <span class="number">20</span></span><br><span class="line">x, y = y, x</span><br><span class="line">x, y, z = y, z, x</span><br></pre></td></tr></table></figure>
+
+<p>对全局名称 <code>x = val</code> 的赋值等同于 <code>_ENV.x = val</code> 的赋值。</p>
+<h3 id="控制结构"><a href="#控制结构" class="headerlink" title="控制结构"></a>控制结构</h3><p><strong>if</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- if exp then block &#123;elseif exp then block&#125; [else block] end</span></span><br><span class="line">flag = <span class="number">1</span></span><br><span class="line"><span class="keyword">if</span> flag == <span class="number">1</span> <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;1&quot;</span>)</span><br><span class="line"><span class="keyword">elseif</span> flag == <span class="number">2</span> <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;2&quot;</span>)</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;unknown&quot;</span>)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>while</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- while exp do block end</span></span><br><span class="line">count = <span class="number">5</span></span><br><span class="line"><span class="keyword">while</span> count &gt; <span class="number">0</span> <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">print</span>(count)</span><br><span class="line">    count = count - <span class="number">1</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>repeat</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- repeat block until exp</span></span><br><span class="line">count = <span class="number">5</span></span><br><span class="line"><span class="keyword">repeat</span></span><br><span class="line">    <span class="built_in">print</span>(count)</span><br><span class="line">    count = count - <span class="number">1</span></span><br><span class="line"><span class="keyword">until</span> count == <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>goto</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">goto</span> label <span class="comment">-- goto Name</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;hello&quot;</span>)</span><br><span class="line">::label:: <span class="comment">-- &#x27;::&#x27; Name &#x27;::&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;world&quot;</span>)</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>break</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">true</span> <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">break</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>return</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">return</span> <span class="comment">-- return [explist] [&#x27;;&#x27;]</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="For-语句"><a href="#For-语句" class="headerlink" title="For 语句"></a>For 语句</h3><p><strong>数值 for</strong></p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- for Name &#x27;=&#x27; exp &#x27;,&#x27; exp [&#x27;,&#x27; exp] do block end</span></span><br><span class="line"><span class="keyword">for</span> i = <span class="number">1</span>, <span class="number">10</span> <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="keyword">for</span> i = <span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span> <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>通用 for</strong></p>
+<p>作用于函数（迭代器）。在每次迭代中，迭代器函数被调用以生成一个新值，当新值为 <strong>nil</strong> 时停止。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- for Name &#123;&#x27;,&#x27; Name&#125; in explist do block end</span></span><br><span class="line"><span class="keyword">for</span> k, v <span class="keyword">in</span> <span class="built_in">pairs</span>(<span class="built_in">_ENV</span>) <span class="keyword">do</span></span><br><span class="line">    <span class="built_in">print</span>(k, <span class="built_in">type</span>(v))</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="变量声明"><a href="#变量声明" class="headerlink" title="变量声明"></a>变量声明</h3><p>局部变量和全局变量可以在块内的任何地方声明，声明可以包含初始化。</p>
+<p>如果没有初始化，局部变量用 <code>nil</code> 初始化，全局变量保持不变。</p>
+<p>名称列表可以以一个属性（尖括号之间的名称）为前缀，每个变量名称可以以一个属性为后缀，前缀属性应用于列表中的所有名称；后缀属性应用于其特定名称。有两种可能的属性：<code>const</code>，声明一个常量或只读变量，即不能用作赋值左侧的变量；和 <code>close</code>，声明一个待关闭变量。只有局部变量可以具有 <code>close</code> 属性。变量列表最多可以包含一个待关闭变量。</p>
+<p>Lua 还提供了全局变量的集体声明，所有代码块都以隐式声明 <code>global *</code> 开始，隐式地将所有以前未明确声明的名称声明为全局变量，特别是，<code>global&lt;const&gt; *</code> 隐式地将所有以前未明确声明的名称声明为只读全局变量。</p>
+<p>不使用全局声明或以 <code>global *</code> 开头的程序可以自由读写任何全局变量；以 <code>global&lt;const&gt; *</code> 开头的程序可以自由只读访问任何全局变量；而以任何其他全局声明（例如，<code>global none</code>）开头的程序只能引用已声明的变量。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- attrib ::= &#x27;&lt;&#x27; Name &#x27;&gt;&#x27;</span></span><br><span class="line"><span class="comment">-- attnamelist ::=  [attrib] Name [attrib] &#123;&#x27;,&#x27; Name [attrib]&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- local attnamelist [&#x27;=&#x27; explist]</span></span><br><span class="line"><span class="keyword">local</span> x = <span class="number">1</span></span><br><span class="line"><span class="keyword">local</span> y, z = <span class="number">2</span>, <span class="number">3</span></span><br><span class="line"><span class="keyword">local</span>&lt;const&gt; ux, uy, uz = <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- global attnamelist [‘=’ explist]</span></span><br><span class="line">global a = <span class="number">1</span></span><br><span class="line">global b, c = <span class="number">2</span>, <span class="number">3</span></span><br><span class="line">global&lt;const&gt; ua, ub, uc = <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- global [attrib] &#x27;*&#x27;</span></span><br><span class="line">global *</span><br><span class="line">global&lt;const&gt; *</span><br></pre></td></tr></table></figure>
+
+<h3 id="待关闭变量"><a href="#待关闭变量" class="headerlink" title="待关闭变量"></a>待关闭变量</h3><p>待关闭变量的行为类似于常量局部变量，不同之处在于，无论何时变量超出作用域，包括正常块终止、通过 <code>break/goto/return</code> 退出其块，或因错误退出，其值都会被关闭。</p>
+<p>关闭一个值意味着调用其 <code>__close</code> 元方法。调用元方法时，值本身作为第一个参数传递。如果发生错误，导致退出的错误对象作为第二个参数传递，否则没有第二个参数。</p>
+<p>分配给待关闭变量的值必须具有 <code>__close</code> 元方法或为假值。（<code>nil</code> 和 <code>false</code> 作为待关闭值被忽略。）</p>
+<p>如果多个待关闭变量在同一事件中超出作用域，它们将以声明的相反顺序关闭。</p>
+<p>如果在运行关闭方法时发生任何错误，该错误将像变量定义处常规代码中的错误一样处理。错误发生后，其他待处理的关闭方法仍将调用。</p>
+<p>如果一个协程让出后永不再次恢复，一些变量可能永远不会超出作用域，因此它们永远不会被关闭。（这些变量是在协程内部创建的，并在协程让出时处于作用域中。）类似地，如果一个协程以错误结束，它不会展开其栈，因此不会关闭任何变量。在这两种情况下，你可以使用终结器或调用 <code>coroutine.close</code> 来关闭变量。但是，如果协程是通过 <code>coroutine.wrap</code> 创建的，那么其对应的函数将在发生错误时关闭协程。</p>
+<h2 id="表达式"><a href="#表达式" class="headerlink" title="表达式"></a>表达式</h2><h3 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h3><h4 id="算术运算符"><a href="#算术运算符" class="headerlink" title="算术运算符"></a>算术运算符</h4><ul>
+<li>**<code>+</code>**：加法</li>
+<li>**<code>-</code>**：减法</li>
+<li>**<code>\*</code>**：乘法</li>
+<li>**<code>/</code>**：浮点除法</li>
+<li>**<code>//</code>**：整除（向下取整）</li>
+<li>**<code>%</code>**：模数</li>
+<li>**<code>^</code>**：幂运算</li>
+<li>**<code>-</code>**：一元负号</li>
+</ul>
+<p>除了幂运算和浮点除法之外，算术运算符的工作方式如下：如果两个操作数都是整数，则操作在整数上执行，结果也是整数。否则，如果两个操作数都是数字，则它们会转换为浮点数，操作按照机器的浮点算术规则（通常是 IEEE 754 标准）执行，结果是浮点数。</p>
+<p>幂运算和浮点除法（<code>/</code>）总是将其操作数转换为浮点数，结果也总是浮点数。幂运算使用 ISO C 函数 <code>pow</code>，因此它也适用于非整数指数。</p>
+<p>整除（<code>//</code>）是一种将商向负无穷方向取整的除法，结果为其操作数除法的向下取整。</p>
+<p>模数定义为除法（向负无穷方向取整）的余数。</p>
+<p>在整数算术溢出的情况下，所有操作都会环绕。</p>
+<h4 id="位运算符"><a href="#位运算符" class="headerlink" title="位运算符"></a>位运算符</h4><ul>
+<li>**<code>&amp;</code>**：按位与</li>
+<li>**<code>|</code>**：按位或</li>
+<li>**<code>~</code>**：按位异或</li>
+<li>**<code>&gt;&gt;</code>**：右移</li>
+<li>**<code>&lt;&lt;</code>**：左移</li>
+<li>**<code>~</code>**：一元按位非</li>
+</ul>
+<p>所有位操作将其操作数转换为整数，对这些整数的所有位进行操作，并产生一个整数结果。</p>
+<p>右移和左移都用零填充空出的位。负位移向另一个方向移动；位移的绝对值等于或高于整数位数时结果为零（因为所有位都被移出）。</p>
+<h4 id="关系运算符"><a href="#关系运算符" class="headerlink" title="关系运算符"></a>关系运算符</h4><ul>
+<li>**<code>==</code>**：相等</li>
+<li>**<code>~=</code>**：不相等</li>
+<li>**<code>&lt;</code>**：小于</li>
+<li>**<code>&gt;</code>**：大于</li>
+<li>**<code>&lt;=</code>**：小于等于</li>
+<li>**<code>&gt;=</code>**：大于等于</li>
+</ul>
+<p>这些运算符总是返回 <code>false</code> 或 <code>true</code>。</p>
+<p>相等 (<code>==</code>) 首先比较其操作数的类型。如果类型不同，则结果为 <code>false</code>。否则，比较操作数的值。如果字符串具有相同的字节内容，则它们相等。如果数字表示相同的数学值，则它们相等。</p>
+<p><code>table</code>、<code>userdata</code> 和 <code>thread</code> 按引用比较：只有当两个对象是同一个对象时，才认为它们相等。每次创建新对象（<code>table</code>、<code>userdata</code> 或 <code>thread</code>）时，此新对象都与任何先前存在的对象不同。函数总是等于它自己。任何具有可检测差异（不同行为、不同定义）的函数总是不同的。在不同时间创建但没有可检测差异的函数可能会被分类为相等或不相等（取决于内部缓存细节）。</p>
+<p>您可以使用 <code>__eq</code> 元方法更改 Lua 比较表和 <code>userdata</code> 的方式。</p>
+<p>相等比较不会将字符串转换为数字，反之亦然。因此，<code>&quot;0&quot;==0</code> 的计算结果为 <code>false</code>，并且 <code>t[0]</code> 和 <code>t[&quot;0&quot;]</code> 表示表中的不同条目。</p>
+<p>运算符 <code>~=</code> 恰好是相等 (<code>==</code>) 的否定。</p>
+<p>顺序运算符的工作方式如下。如果两个参数都是数字，则根据它们的数学值进行比较，无论其子类型如何。否则，如果两个参数都是字符串，则根据当前区域设置比较它们的值。否则，Lua 会尝试调用 <code>__lt</code> 或 <code>__le</code> 元方法。比较 <code>a &gt; b</code> 被转换为 <code>b &lt; a</code>，而 <code>a &gt;= b</code> 被转换为 <code>b &lt;= a</code>。</p>
+<p>根据 IEEE 754 标准，特殊值 NaN 既不小于、不等于、也不大于任何值，包括其自身。</p>
+<h4 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h4><p>Lua 中的逻辑运算符是 <code>and</code>、<code>or</code> 和 <code>not</code>，与控制结构一样，所有逻辑运算符都将 <code>false</code> 和 <code>nil</code> 视为假，将其他任何值视为真。</p>
+<h4 id="连接运算符"><a href="#连接运算符" class="headerlink" title="连接运算符"></a>连接运算符</h4><p>Lua 中的字符串连接运算符由两个点（’<code>..</code>‘）表示。如果两个操作数都是字符串或数字，则数字会以非指定格式转换为字符串。否则，会调用 <code>__concat</code> 元方法。</p>
+<h4 id="长度运算符"><a href="#长度运算符" class="headerlink" title="长度运算符"></a>长度运算符</h4><p>长度运算符由一元前缀运算符 <code>#</code> 表示。</p>
+<p>字符串的长度是它的字节数。（当每个字符是一个字节时，这是字符串长度的通常含义。）</p>
+<p>应用于表的长度运算符返回该表中的一个边界。表 <code>t</code> 中的一个边界是满足以下条件的任何非负整数</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(border == <span class="number">0</span> <span class="keyword">or</span> t[border] ~= <span class="literal">nil</span>) <span class="keyword">and</span></span><br><span class="line">(t[border + <span class="number">1</span>] == <span class="literal">nil</span> <span class="keyword">or</span> border == <span class="built_in">math</span>.maxinteger)</span><br></pre></td></tr></table></figure>
+
+<p>换句话说，边界是表中存在的任何正整数索引，后跟一个不存在的索引，加上两种极限情况：当索引 1 不存在时为零；当该索引存在时为整数的最大值。请注意，非正整数的键不会干扰边界。</p>
+<p>具有恰好一个边界的表称为序列，例如，</p>
+<ul>
+<li>表 <code>&#123;10,20,30,40,50&#125;</code> 是一个序列，因为它只有一个边界 (5)。</li>
+<li>表 <code>&#123;10,20,30,nil,50&#125;</code> 有两个边界 (3 和 5)，因此它不是一个序列。（索引 4 处的 <code>nil</code> 称为一个空洞。）</li>
+<li>表 <code>&#123;nil,20,30,nil,nil,60,nil&#125;</code> 有三个边界 (0, 3 和 6)，所以它也不是一个序列。表 <code>&#123;&#125;</code> 是一个边界为 0 的序列。</li>
+</ul>
+<p>当 <code>t</code> 是一个序列时，<code>#t</code> 返回其唯一的边界，这与序列长度的直观概念相对应。当 <code>t</code> 不是序列时，<code>#t</code> 可以返回其任何边界。（具体哪个取决于表内部表示的细节，这又可能取决于表的填充方式及其非数字键的内存地址。）</p>
+<p>表长度的计算保证最坏时间复杂度为 <code>O(log n)</code>，其中 <code>n</code> 是表中最大的整数键。</p>
+<p>程序可以通过 <code>__len</code> 元方法修改除字符串之外的任何值的长度运算符的行为。</p>
+<h4 id="运算符优先级"><a href="#运算符优先级" class="headerlink" title="运算符优先级"></a>运算符优先级</h4><p>Lua 中的运算符优先级遵循下表，从低到高</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">or</span><br><span class="line">and</span><br><span class="line">&lt;     &gt;     &lt;=    &gt;=    ~=    ==</span><br><span class="line">|</span><br><span class="line">~</span><br><span class="line">&amp;</span><br><span class="line">&lt;&lt;    &gt;&gt;</span><br><span class="line">..</span><br><span class="line">+     -</span><br><span class="line">*     /     //    %</span><br><span class="line">unary operators (not   #     -     ~)</span><br><span class="line">^</span><br></pre></td></tr></table></figure>
+
+<p>通常，您可以使用括号来改变表达式的优先级。连接运算符（’<code>..</code>‘）和幂运算符（’<code>^</code>‘）是右结合的。所有其他二元运算符都是左结合的。</p>
+<h3 id="强制转换和转换"><a href="#强制转换和转换" class="headerlink" title="强制转换和转换"></a>强制转换和转换</h3><p>Lua 在运行时在某些类型和表示之间提供了一些自动转换。位运算符总是将浮点操作数转换为整数。幂运算和浮点除法总是将整数操作数转换为浮点数。应用于混合数字（整数和浮点数）的所有其他算术运算都会将整数操作数转换为浮点数。C API 也根据需要将整数转换为浮点数，将浮点数转换为整数。此外，字符串连接除了字符串之外还接受数字作为参数。</p>
+<p>在从整数到浮点数的转换中，如果整数值具有精确的浮点数表示，则结果就是该表示。否则，转换将得到最接近的更高或更低的代表值。这种转换永不失败。</p>
+<p>从浮点数到整数的转换会检查浮点数是否具有精确的整数表示（即，浮点数具有整数值且在整数表示范围内）。如果具有，则该表示即为结果。否则，转换失败。</p>
+<p>Lua 中有几个地方在必要时会将字符串强制转换为数字。特别是，字符串库设置了元方法，试图在所有算术运算中将字符串强制转换为数字。如果转换失败，库会调用另一个操作数的元方法（如果存在），否则会引发错误。请注意，位运算符不会进行这种强制转换。</p>
+<p>最好不要依赖从字符串到数字的隐式强制转换，因为它们并非总是适用；特别是，<code>&quot;1&quot;==1</code> 为 <code>false</code>，而 <code>&quot;1&quot;&lt;1</code> 会引发错误。这些强制转换主要为了兼容性而存在，并可能在语言的未来版本中移除。</p>
+<p>字符串根据其语法和 Lua 词法分析器的规则转换为整数或浮点数。字符串也可以带有前导和尾随空格以及符号。所有从字符串到数字的转换都接受点和当前区域标记作为基数字符。（但是，Lua 词法分析器只接受点。）如果字符串不是有效的数字，则转换失败。如果需要，此第一步的结果将根据前面浮点数和整数之间转换的规则转换为特定的数字子类型。</p>
+<p>从数字到字符串的转换使用未指定的人类可读格式。要以任何特定方式将数字转换为字符串，请使用函数 <code>string.format</code>。</p>
+<h3 id="表构造器"><a href="#表构造器" class="headerlink" title="表构造器"></a>表构造器</h3><p>表构造器是创建表的表达式。每次评估构造器时，都会创建一个新表。构造器可以用于创建空表，或者创建表并初始化其某些字段。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- tableconstructor ::= &#x27;&#123;&#x27; [fieldlist] &#x27;&#125;&#x27;</span></span><br><span class="line"><span class="comment">-- fieldlist ::= field &#123;fieldsep field&#125; [fieldsep]</span></span><br><span class="line"><span class="comment">-- field ::= &#x27;[&#x27; exp &#x27;]&#x27; &#x27;=&#x27; exp | Name &#x27;=&#x27; exp | exp</span></span><br><span class="line"><span class="comment">-- fieldsep ::= &#x27;,&#x27; | &#x27;;&#x27;</span></span><br><span class="line">a = &#123; [f(<span class="number">1</span>)] = g; <span class="string">&quot;x&quot;</span>, <span class="string">&quot;y&quot;</span>; x = <span class="number">1</span>, f(x), [<span class="number">30</span>] = <span class="number">23</span>; <span class="number">45</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">    <span class="keyword">local</span> t = &#123;&#125;</span><br><span class="line">    t[f(<span class="number">1</span>)] = g</span><br><span class="line">    t[<span class="number">1</span>] = <span class="string">&quot;x&quot;</span>         <span class="comment">-- 1st exp</span></span><br><span class="line">    t[<span class="number">2</span>] = <span class="string">&quot;y&quot;</span>         <span class="comment">-- 2nd exp</span></span><br><span class="line">    t.x = <span class="number">1</span>            <span class="comment">-- t[&quot;x&quot;] = 1</span></span><br><span class="line">    t[<span class="number">3</span>] = f(x)        <span class="comment">-- 3rd exp</span></span><br><span class="line">    t[<span class="number">30</span>] = <span class="number">23</span></span><br><span class="line">    t[<span class="number">4</span>] = <span class="number">45</span>          <span class="comment">-- 4th exp</span></span><br><span class="line">    a = t</span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>构造器中赋值的顺序是未定义的。（此顺序仅在存在重复键时才相关。）</p>
+<p>如果列表中的最后一个字段是 <code>exp</code> 形式，且表达式是一个多结果表达式，则该表达式返回的所有值都将按顺序添加到列表中。</p>
+<p>字段列表可以有一个可选的尾随分隔符，这对于机器生成的代码很方便。</p>
+<h3 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h3><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Ty = &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Ty.fn1</span><span class="params">(s)</span></span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">type</span>(<span class="built_in">self</span>)) <span class="comment">--&gt; nil</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Ty:fn2</span><span class="params">(s)</span></span> <span class="comment">-- function Ty.fn2(self)</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="built_in">type</span>(<span class="built_in">self</span>)) <span class="comment">--&gt; table</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- functioncall ::= prefixexp args</span></span><br><span class="line"><span class="comment">-- args ::= ‘(’ [explist] ‘)’</span></span><br><span class="line"><span class="comment">-- args ::= tableconstructor</span></span><br><span class="line"><span class="comment">-- args ::= LiteralString</span></span><br><span class="line">Ty.fn1(<span class="string">&quot;fn1&quot;</span>)</span><br><span class="line">Ty.fn1&#123;<span class="string">&quot;fn1&quot;</span>&#125;</span><br><span class="line">Ty.fn1<span class="string">&quot;fn1&quot;</span></span><br><span class="line">Ty.fn1<span class="string">[[fn1]]</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- functioncall ::= prefixexp &#x27;:&#x27; Name args</span></span><br><span class="line">Ty:fn2(<span class="string">&quot;fn2&quot;</span>) <span class="comment">-- Ty.fn2(Ty)</span></span><br></pre></td></tr></table></figure>
+
+<p>调用 <code>v:name(args)</code> 是 <code>v.name(v, args)</code> 的语法糖，只不过 <code>v</code> 只求值一次。</p>
+<p>所有参数表达式都在调用之前求值。形式为 <code>f&#123;fields&#125;</code> 的调用是 <code>f(&#123;fields&#125;)</code> 的语法糖；也就是说，参数列表是一个单独的新表。形式为 <code>f&#39;string&#39;</code>（或 <code>f&quot;string&quot;</code> 或 <code>f[[string]]</code>）的调用是 <code>f(&#39;string&#39;)</code> 的语法糖；也就是说，参数列表是一个单独的字面字符串。</p>
+<p>不在待关闭变量作用域内的 <code>return functioncall</code> 形式的调用被称为尾调用。Lua 实现了恰当尾调用（或恰当尾递归）：在尾调用中，被调用的函数重用调用函数的堆栈条目。因此，程序可以执行的嵌套尾调用次数没有限制。然而，尾调用会擦除关于调用函数的任何调试信息。请注意，尾调用只发生在特定的语法中，即 <code>return</code> 只有一个函数调用作为参数，并且它在任何待关闭变量的作用域之外。这种语法使得调用函数精确地返回被调用函数的返回值，没有任何中间操作。因此，以下任何示例都不是尾调用</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> (f(x))        <span class="comment">-- results adjusted to 1</span></span><br><span class="line"><span class="keyword">return</span> <span class="number">2</span> * f(x)      <span class="comment">-- result multiplied by 2</span></span><br><span class="line"><span class="keyword">return</span> x, f(x)       <span class="comment">-- additional results</span></span><br><span class="line">f(x); <span class="keyword">return</span>         <span class="comment">-- results discarded</span></span><br><span class="line"><span class="keyword">return</span> x <span class="keyword">or</span> f(x)     <span class="comment">-- results adjusted to 1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="函数定义"><a href="#函数定义" class="headerlink" title="函数定义"></a>函数定义</h3><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">t=&#123;&#125;</span><br><span class="line"><span class="comment">-- functiondef ::= function funcbody</span></span><br><span class="line"><span class="comment">-- funcbody ::= &#x27;(&#x27; [parlist] &#x27;)&#x27; block end</span></span><br><span class="line"><span class="comment">-- parlist ::= namelist [&#x27;,&#x27; varargparam] | varargparam</span></span><br><span class="line"><span class="comment">-- varargparam ::= &#x27;...&#x27; [Name]</span></span><br><span class="line">fn = <span class="function"><span class="keyword">function</span><span class="params">(a, b, ...c)</span></span> <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- funcname ::= Name &#123;‘.’ Name&#125; [‘:’ Name]</span></span><br><span class="line"><span class="comment">-- function funcname funcbody</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fn1</span> <span class="params">(params)</span></span> <span class="keyword">end</span> <span class="comment">-- fn1 = function (params) end</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">t.a</span> <span class="params">(params)</span></span> <span class="keyword">end</span> <span class="comment">-- t.a = function (params) end</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">t:b</span> <span class="params">(params)</span></span> <span class="keyword">end</span> <span class="comment">-- t.b = function (self, params) end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- local function Name funcbody</span></span><br><span class="line"><span class="keyword">local</span> <span class="function"><span class="keyword">function</span> <span class="title">fn2</span> <span class="params">(params)</span></span> <span class="keyword">end</span> <span class="comment">-- local fn2; fn2 = function (params) end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- global function Name funcbody</span></span><br><span class="line">global <span class="function"><span class="keyword">function</span> <span class="title">fn3</span> <span class="params">(params)</span></span> <span class="keyword">end</span> <span class="comment">-- global fn3; global fn3 = function (params) end</span></span><br></pre></td></tr></table></figure>
+
+<p>冒号语法用于模拟方法，为函数添加一个隐式的额外参数 <code>self</code>。</p>
+<p>函数定义是一个可执行表达式，其值类型为 <code>function</code>。当 Lua 预编译一个块时，它的所有函数体也会被预编译，但它们尚未创建。然后，每当 Lua 执行函数定义时，该函数就会被实例化（或称为闭包）。此函数实例，或闭包，是表达式的最终值。</p>
+<p>结果通过 <code>return</code> 语句返回。如果控制到达函数末尾而没有遇到 <code>return</code> 语句，则函数不返回任何结果。</p>
+<p>函数可能返回的值的数量受系统限制，此限制保证至少为 1000。</p>
+<p>当 Lua 函数被调用时，它会调整其参数列表以匹配其参数列表的长度，除非该函数是可变参数函数，这由其参数列表末尾的三个点（’<code>...</code>‘）表示。可变参数函数不会调整其参数列表；相反，它会收集所有额外参数并通过可变参数表将它们提供给函数。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">f</span><span class="params">(a, b)</span></span> <span class="keyword">end</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">g</span><span class="params">(a, b, ...)</span></span> <span class="keyword">end</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">r</span><span class="params">()</span></span> <span class="keyword">return</span> <span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span> <span class="keyword">end</span></span><br><span class="line">f(<span class="number">3</span>)             <span class="comment">-- a=3, b=nil</span></span><br><span class="line">f(<span class="number">3</span>, <span class="number">4</span>)          <span class="comment">-- a=3, b=4</span></span><br><span class="line">f(<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>)       <span class="comment">-- a=3, b=4</span></span><br><span class="line">f(r(), <span class="number">10</span>)       <span class="comment">-- a=1, b=10</span></span><br><span class="line">f(r())           <span class="comment">-- a=1, b=2</span></span><br><span class="line"></span><br><span class="line">g(<span class="number">3</span>)             <span class="comment">-- a=3, b=nil, va. table -&gt;  &#123;n = 0&#125;</span></span><br><span class="line">g(<span class="number">3</span>, <span class="number">4</span>)          <span class="comment">-- a=3, b=4,   va. table -&gt;  &#123;n = 0&#125;</span></span><br><span class="line">g(<span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">8</span>)    <span class="comment">-- a=3, b=4,   va. table -&gt;  &#123;5, 8, n = 2&#125;</span></span><br><span class="line">g(<span class="number">5</span>, r())        <span class="comment">-- a=5, b=1,   va. table -&gt;  &#123;2, 3, n = 2&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>可变参数函数中的可变参数表可以有一个可选名称，位于三个点之后。当存在时，该名称表示一个只读局部变量，它引用可变参数表。如果可变参数表没有名称，则只能通过可变参数表达式访问它。</p>
+<p>可变参数表达式也写成三个点，其值是可变参数表中从 1 到索引“<code>n</code>”处的整数值的值列表。（因此，如果代码不修改可变参数表，则此列表对应于函数调用中的额外参数。）此列表的行为类似于具有多个结果的函数的结果。</p>
+<p>作为一项优化，如果变参表满足某些条件，代码不会创建实际的表，而是将索引表达式和变参表达式转换为对内部变参数据的访问。条件如下：如果变参表有名称，该名称不是嵌套函数中的上值，并且仅用作语法结构 <code>t[exp]</code> 或 <code>t.id</code> 中的基本表。请注意，匿名变参表总是满足这些条件。</p>
+<h3 id="多结果表达式"><a href="#多结果表达式" class="headerlink" title="多结果表达式"></a>多结果表达式</h3><p>函数调用和变参表达式都可以产生多个值，这些表达式被称为多结果表达式。</p>
+<p>当多结果表达式作为表达式列表的最后一个元素使用时，该表达式的所有结果都会添加到表达式列表产生的值列表中。请注意，在一个期望表达式列表的位置中的单个表达式是该（单例）列表中的最后一个表达式。</p>
+<p>以下是 Lua 期望表达式列表的位置</p>
+<ul>
+<li><code>return</code> 语句，例如 <code>return e1,e2,e3</code>。</li>
+<li>表构造器，例如 <code>&#123;e1,e2,e3&#125;</code>。</li>
+<li>函数调用的参数，例如 <code>foo(e1,e2,e3)</code>。</li>
+<li>多重赋值，例如 <code>a,b,c = e1,e2,e3</code>。</li>
+<li>局部或全局声明，类似于多重赋值。</li>
+<li>通用 <code>for</code> 循环的初始值，例如 <code>for k in e1,e2,e3 do ... end</code>。</li>
+</ul>
+<p>在后四种情况下，表达式列表中的值列表必须调整到特定长度：非变参函数调用中的参数数量、多重赋值或声明中的变量数量，以及通用 <code>for</code> 循环的恰好四个值。调整遵循以下规则：如果值多于所需，则多余的值将被丢弃；如果值少于所需，则列表将用 <code>nil</code> 扩展。当表达式列表以多结果表达式结束时，该表达式的所有结果在调整之前都会进入值列表。</p>
+<p>当多结果表达式在表达式列表中使用而不是最后一个元素，或者在语法期望单个表达式的位置使用时，Lua 会将该表达式的结果列表调整为一个元素。作为一个特例，语法期望括号表达式中只有一个表达式；因此，在多结果表达式周围添加括号会强制它只产生一个结果。</p>
+<p>我们很少需要在语法期望单个表达式的位置使用变参表达式。（通常，在变参部分之前添加一个常规参数并使用该参数会更简单。）当确实有这种需求时，我们建议将变参表达式赋值给单个变量并在其位置使用该变量。</p>
+<p>以下是一些多结果表达式用法的示例。在所有情况下，当构造需要“第 n 个结果”而没有这样的结果时，它会使用 <code>nil</code>。</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(x, f())      <span class="comment">-- prints x and all results from f().</span></span><br><span class="line"><span class="built_in">print</span>(x, (f()))    <span class="comment">-- prints x and the first result from f().</span></span><br><span class="line"><span class="built_in">print</span>(f(), x)      <span class="comment">-- prints the first result from f() and x.</span></span><br><span class="line"><span class="built_in">print</span>(<span class="number">1</span> + f())     <span class="comment">-- prints 1 added to the first result from f().</span></span><br><span class="line"><span class="keyword">local</span> x = ...      <span class="comment">-- x gets the first vararg argument.</span></span><br><span class="line">x,y = ...          <span class="comment">-- x gets the first vararg argument,</span></span><br><span class="line">                   <span class="comment">-- y gets the second vararg argument.</span></span><br><span class="line">x,y,z = w, f()     <span class="comment">-- x gets w, y gets the first result from f(),</span></span><br><span class="line">                   <span class="comment">-- z gets the second result from f().</span></span><br><span class="line">x,y,z = f()        <span class="comment">-- x gets the first result from f(),</span></span><br><span class="line">                   <span class="comment">-- y gets the second result from f(),</span></span><br><span class="line">                   <span class="comment">-- z gets the third result from f().</span></span><br><span class="line">x,y,z = f(), g()   <span class="comment">-- x gets the first result from f(),</span></span><br><span class="line">                   <span class="comment">-- y gets the first result from g(),</span></span><br><span class="line">                   <span class="comment">-- z gets the second result from g().</span></span><br><span class="line">x,y,z = (f())      <span class="comment">-- x gets the first result from f(), y and z get nil.</span></span><br><span class="line"><span class="keyword">return</span> f()         <span class="comment">-- returns all results from f().</span></span><br><span class="line"><span class="keyword">return</span> x, ...      <span class="comment">-- returns x and all received vararg arguments.</span></span><br><span class="line"><span class="keyword">return</span> x,y,f()     <span class="comment">-- returns x, y, and all results from f().</span></span><br><span class="line">&#123;f()&#125;              <span class="comment">-- creates a list with all results from f().</span></span><br><span class="line">&#123;...&#125;              <span class="comment">-- creates a list with all vararg arguments.</span></span><br><span class="line">&#123;f(), <span class="number">5</span>&#125;           <span class="comment">-- creates a list with the first result from f() and 5.</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="标准库"><a href="#标准库" class="headerlink" title="标准库"></a>标准库</h2><p>只提供速查，完整说明查询官方文档。</p>
+<h3 id="基本函数"><a href="#基本函数" class="headerlink" title="基本函数"></a>基本函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>简洁说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>assert (v [, message])</code></td>
+<td>如果参数 <code>v</code> 的值为假（即<code>nil</code> 或 <code>false</code>），则引发错误；否则，返回所有参数。</td>
+</tr>
+<tr>
+<td><code>collectgarbage ([opt [, arg]])</code></td>
+<td>此函数是垃圾回收器的通用接口。它根据其第一个参数 <code>opt</code> 执行不同的功能。</td>
+</tr>
+<tr>
+<td><code>dofile ([filename])</code></td>
+<td>打开指定文件并将其内容作为 Lua 块执行，返回该块返回的所有值。当不带参数调用时，<code>dofile</code> 执行标准输入（<code>stdin</code>）的内容。</td>
+</tr>
+<tr>
+<td><code>error (message [, level])</code></td>
+<td>引发一个错误，其中 <code>message</code> 作为错误对象。此函数从不返回。</td>
+</tr>
+<tr>
+<td><code>_G</code></td>
+<td>一个全局变量（不是函数），它持有全局环境。Lua 本身不使用此变量；改变其值不会影响任何环境，反之亦然。</td>
+</tr>
+<tr>
+<td><code>getmetatable (object)</code></td>
+<td>如果 <code>object</code> 没有元表，则返回 <code>nil</code>。否则，如果对象的元表有一个 <code>__metatable</code> 字段，则返回关联的值。否则，返回给定对象的元表。</td>
+</tr>
+<tr>
+<td><code>ipairs (t)</code></td>
+<td>返回三个值（一个迭代器函数，值 <code>t</code>，和 0）。</td>
+</tr>
+<tr>
+<td><code>load (chunk [, chunkname [, mode [, env]]])</code></td>
+<td>加载一个代码块。</td>
+</tr>
+<tr>
+<td><code>loadfile ([filename [, mode [, env]]])</code></td>
+<td>类似于 <a target="_blank" rel="noopener" href="https://docs.moyiliu.com/lua-5.5/manual.html#pdf-load"><code>load</code></a>，但是从文件 <code>filename</code> 获取块，如果没有给出文件名，则从标准输入获取。</td>
+</tr>
+<tr>
+<td><code>next (table [, index])</code></td>
+<td>允许程序遍历表的所有字段。</td>
+</tr>
+<tr>
+<td><code>pairs (t)</code></td>
+<td>如果 <code>t</code> 有一个元方法 <code>__pairs</code>，则以 <code>t</code> 作为参数调用它，并返回该调用的前四个结果。否则，返回 <code>next</code> 函数、表 <code>t</code>，以及两个 <code>nil</code> 值。</td>
+</tr>
+<tr>
+<td><code>pcall (f [, arg1, ···])</code></td>
+<td>以“受保护模式”调用函数 <code>f</code> 并传入给定参数。</td>
+</tr>
+<tr>
+<td><code>print (···)</code></td>
+<td>接收任意数量的参数并将其值打印到 <code>stdout</code>，按照与 <code>tostring</code> 相同的规则将每个参数转换为字符串。</td>
+</tr>
+<tr>
+<td><code>rawequal (v1, v2)</code></td>
+<td>检查 <code>v1</code> 是否等于 <code>v2</code>，不调用 <code>__eq</code> 元方法。返回布尔值。</td>
+</tr>
+<tr>
+<td><code>rawget (table, index)</code></td>
+<td>获取 <code>table[index]</code> 的真实值，不使用 <code>__index</code> 元值。<code>table</code> 必须是一个表；<code>index</code> 可以是任何值。</td>
+</tr>
+<tr>
+<td><code>rawlen (v)</code></td>
+<td>返回对象 <code>v</code> 的长度，它必须是一个表或字符串，不调用 <code>__len</code> 元方法。返回一个整数。</td>
+</tr>
+<tr>
+<td><code>rawset (table, index, value)</code></td>
+<td>将 <code>table[index]</code> 的真实值设置为 <code>value</code>，不使用 <code>__newindex</code> 元值。<code>table</code> 必须是一个表。</td>
+</tr>
+<tr>
+<td><code>select (index, ···)</code></td>
+<td>如果 <code>index</code> 是一个数字，则返回参数 <code>index</code> 之后的所有参数；负数从末尾开始索引（-1 是最后一个参数）。<br />否则，<code>index</code> 必须是字符串“<code>#</code>”，<code>select</code> 返回它收到的额外参数的总数。</td>
+</tr>
+<tr>
+<td><code>setmetatable (table, metatable)</code></td>
+<td>设置给定表的元表。如果 <code>metatable</code> 是 <strong>nil</strong>，则删除给定表的元表。如果原始元表有 <code>__metatable</code> 字段，则引发错误。</td>
+</tr>
+<tr>
+<td><code>tonumber (e [, base])</code></td>
+<td><code>tonumber</code> 尝试将其参数转换为数字。</td>
+</tr>
+<tr>
+<td><code>tostring (v)</code></td>
+<td>接收任何类型的值，并将其转换为人类可读的字符串格式。</td>
+</tr>
+<tr>
+<td><code>type (v)</code></td>
+<td>返回其唯一参数的类型，编码为字符串。</td>
+</tr>
+<tr>
+<td><code>_VERSION</code></td>
+<td>一个全局变量（不是函数），它包含一个字符串，该字符串表示正在运行的 Lua 版本。</td>
+</tr>
+<tr>
+<td><code>warn (msg1, ···)</code></td>
+<td>发出一个警告，其消息由所有参数（应为字符串）的连接组成。</td>
+</tr>
+<tr>
+<td><code>xpcall (f, msgh [, arg1, ···])</code></td>
+<td>此函数类似于 <a target="_blank" rel="noopener" href="https://docs.moyiliu.com/lua-5.5/manual.html#pdf-pcall"><code>pcall</code></a>，不同之处在于它设置了一个新的消息处理程序 <code>msgh</code>。</td>
+</tr>
+</tbody></table>
+<h3 id="协程-1"><a href="#协程-1" class="headerlink" title="协程"></a>协程</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>简洁说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>coroutine.close ([co])</code></td>
+<td>关闭协同程序 <code>co</code></td>
+</tr>
+<tr>
+<td><code>coroutine.create (f)</code></td>
+<td>创建一个新的协同程序</td>
+</tr>
+<tr>
+<td><code>coroutine.isyieldable ([co])</code></td>
+<td>当协同程序 <code>co</code> 可以让出时返回 <code>true</code></td>
+</tr>
+<tr>
+<td><code>coroutine.resume (co [, val1, ···])</code></td>
+<td>启动或继续执行协同程序 <code>co</code></td>
+</tr>
+<tr>
+<td><code>coroutine.running ()</code></td>
+<td>返回正在运行的协同程序以及一个布尔值，当正在运行的协同程序是主协同程序时为 <code>true</code></td>
+</tr>
+<tr>
+<td><code>coroutine.status (co)</code></td>
+<td>返回协同程序 <code>co</code> 的状态</td>
+</tr>
+<tr>
+<td><code>coroutine.wrap (f)</code></td>
+<td>创建一个新的协同程序，返回一个函数</td>
+</tr>
+<tr>
+<td><code>coroutine.yield (···)</code></td>
+<td>挂起调用协同程序的执行，<code>yield</code> 的所有参数都作为额外结果传递给 <code>resume</code></td>
+</tr>
+</tbody></table>
+<h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>简洁说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>require (modname)</code></td>
+<td>加载给定的模块。</td>
+</tr>
+<tr>
+<td><code>package.config</code></td>
+<td>一个描述包的一些编译时配置的字符串。</td>
+</tr>
+<tr>
+<td><code>package.cpath</code></td>
+<td>一个字符串，其中包含 <a target="_blank" rel="noopener" href="https://docs.moyiliu.com/lua-5.5/manual.html#pdf-require"><code>require</code></a> 用于搜索 C 加载器的路径。</td>
+</tr>
+<tr>
+<td><code>package.loaded</code></td>
+<td>一个表，由 <code>require</code> 用于控制哪些模块已经加载。</td>
+</tr>
+<tr>
+<td><code>package.loadlib (libname, funcname)</code></td>
+<td>将宿主程序与 C 库 <code>libname</code> 动态链接。</td>
+</tr>
+<tr>
+<td><code>package.path</code></td>
+<td>一个字符串，其中包含 <code>require</code> 用于搜索 Lua 加载器的路径。</td>
+</tr>
+<tr>
+<td><code>package.preload</code></td>
+<td>一个用于存储特定模块加载器的表（参见 <code>require</code>）。</td>
+</tr>
+<tr>
+<td><code>package.searchers</code></td>
+<td>一个表，由 <code>require</code> 用于控制如何查找模块。</td>
+</tr>
+<tr>
+<td><code>package.searchpath (name, path [, sep [, rep]])</code></td>
+<td>在给定 <code>path</code> 中搜索给定 <code>name</code>。</td>
+</tr>
+</tbody></table>
+<h3 id="字符串操作"><a href="#字符串操作" class="headerlink" title="字符串操作"></a>字符串操作</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>简洁说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>string.byte (s [, i [, j]])</code></td>
+<td>返回字符 <code>s[i]</code>, <code>s[i+1]</code>, …, <code>s[j]</code> 的内部数字代码。</td>
+</tr>
+<tr>
+<td><code>string.char (···)</code></td>
+<td>接收零个或多个整数，返回一个长度等于参数数量的字符串。</td>
+</tr>
+<tr>
+<td><code>string.dump (function [, strip])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.find (s, pattern [, init [, plain]])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.format (formatstring, ···)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.gmatch (s, pattern [, init])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.gsub (s, pattern, repl [, n])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.len (s)</code></td>
+<td>接收一个字符串并返回其长度。</td>
+</tr>
+<tr>
+<td><code>string.lower (s)</code></td>
+<td>所有大写字母都更改为小写。</td>
+</tr>
+<tr>
+<td><code>string.match (s, pattern [, init])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.pack (fmt, v1, v2, ···)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.packsize (fmt)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.rep (s, n [, sep])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.reverse (s)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.sub (s, i [, j])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.unpack (fmt, s [, pos])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>string.upper (s)</code></td>
+<td>所有小写字母都更改为大写。</td>
+</tr>
+</tbody></table>
+<h3 id="UTF-8"><a href="#UTF-8" class="headerlink" title="UTF-8"></a>UTF-8</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>简洁说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>utf8.char (···)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>utf8.charpattern</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>utf8.codes (s [, lax])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>utf8.codepoint (s [, i [, j [, lax]]])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>utf8.len (s [, i [, j [, lax]]])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>utf8.offset (s, n [, i])</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>简洁说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>table.concat (list [, sep [, i [, j]]])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>table.create (nseq [, nrec])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>table.insert (list, [pos,] value)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>table.move (a1, f, e, t [,a2])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>table.pack (···)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>table.remove (list [, pos])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>table.sort (list [, comp])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>table.unpack (list [, i [, j]])</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="数学函数"><a href="#数学函数" class="headerlink" title="数学函数"></a>数学函数</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>简洁说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>math.abs (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.acos (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.asin (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.atan (y [, x])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.ceil (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.cos (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.deg (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.exp (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.floor (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.fmod (x, y)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.frexp (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.huge</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.ldexp (m, e)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.log (x [, base])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.max (x, ···)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.maxinteger</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.min (x, ···)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.mininteger</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.modf (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.pi</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.rad (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.random ([m [, n]])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.randomseed ([x [, y]])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.sin (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.sqrt (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.tan (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.tointeger (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.type (x)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>math.ult (m, n)</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="输入和输出"><a href="#输入和输出" class="headerlink" title="输入和输出"></a>输入和输出</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>简洁说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>io.stdin</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.stdout</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.stderr</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.close ([file])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.flush ()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.input ([file])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.lines ([filename, ···])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.open (filename [, mode])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.output ([file])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.popen (prog [, mode])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.read (···)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.tmpfile ()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.type (obj)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>io.write (···)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>file:close ()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>file:flush ()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>file:lines (···)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>file:read (···)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>file:seek ([whence [, offset]])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>file:setvbuf (mode [, size])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>file:write (···)</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="系统"><a href="#系统" class="headerlink" title="系统"></a>系统</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>简洁说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>os.clock ()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>os.date ([format [, time]])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>os.difftime (t2, t1)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>os.execute ([command])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>os.exit ([code [, close]])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>os.getenv (varname)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>os.remove (filename)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>os.rename (oldname, newname)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>os.setlocale (locale [, category])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>os.time ([table])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>os.tmpname ()</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="调试库"><a href="#调试库" class="headerlink" title="调试库"></a>调试库</h3><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>简洁说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>debug.debug ()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.gethook ([thread])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.getinfo ([thread,] f [, what])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.getlocal ([thread,] f, local)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.getmetatable (value)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.getregistry ()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.getupvalue (f, up)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.getuservalue (u, n)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.sethook ([thread,] hook, mask [, count])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.setlocal ([thread,] level, local, value)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.setmetatable (value, table)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.setupvalue (f, up, value)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.setuservalue (udata, value, n)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.traceback ([thread,] [message [, level]])</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.upvalueid (f, n)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>debug.upvaluejoin (f1, n1, f2, n2)</code></td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="完整语法"><a href="#完整语法" class="headerlink" title="完整语法"></a>完整语法</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">chunk ::= block</span><br><span class="line"></span><br><span class="line">block ::= &#123;stat&#125; [retstat]</span><br><span class="line"></span><br><span class="line">stat ::=  ‘;’ | </span><br><span class="line">	 varlist ‘=’ explist | </span><br><span class="line">	 functioncall | </span><br><span class="line">	 label | </span><br><span class="line">	 break | </span><br><span class="line">	 goto Name | </span><br><span class="line">	 do block end | </span><br><span class="line">	 while exp do block end | </span><br><span class="line">	 repeat block until exp | </span><br><span class="line">	 if exp then block &#123;elseif exp then block&#125; [else block] end | </span><br><span class="line">	 for Name ‘=’ exp ‘,’ exp [‘,’ exp] do block end | </span><br><span class="line">	 for namelist in explist do block end | </span><br><span class="line">	 function funcname funcbody | </span><br><span class="line">	 local function Name funcbody | </span><br><span class="line">	 global function Name funcbody | </span><br><span class="line">	 local attnamelist [‘=’ explist] | </span><br><span class="line">	 global attnamelist | </span><br><span class="line">	 global [attrib] ‘*’ </span><br><span class="line"></span><br><span class="line">attnamelist ::=  [attrib] Name [attrib] &#123;‘,’ Name [attrib]&#125;</span><br><span class="line"></span><br><span class="line">attrib ::= ‘&lt;’ Name ‘&gt;’</span><br><span class="line"></span><br><span class="line">retstat ::= return [explist] [‘;’]</span><br><span class="line"></span><br><span class="line">label ::= ‘::’ Name ‘::’</span><br><span class="line"></span><br><span class="line">funcname ::= Name &#123;‘.’ Name&#125; [‘:’ Name]</span><br><span class="line"></span><br><span class="line">varlist ::= var &#123;‘,’ var&#125;</span><br><span class="line"></span><br><span class="line">var ::=  Name | prefixexp ‘[’ exp ‘]’ | prefixexp ‘.’ Name </span><br><span class="line"></span><br><span class="line">namelist ::= Name &#123;‘,’ Name&#125;</span><br><span class="line"></span><br><span class="line">explist ::= exp &#123;‘,’ exp&#125;</span><br><span class="line"></span><br><span class="line">exp ::=  nil | false | true | Numeral | LiteralString | ‘...’ | functiondef | </span><br><span class="line">	 prefixexp | tableconstructor | exp binop exp | unop exp </span><br><span class="line"></span><br><span class="line">prefixexp ::= var | functioncall | ‘(’ exp ‘)’</span><br><span class="line"></span><br><span class="line">functioncall ::=  prefixexp args | prefixexp ‘:’ Name args </span><br><span class="line"></span><br><span class="line">args ::=  ‘(’ [explist] ‘)’ | tableconstructor | LiteralString </span><br><span class="line"></span><br><span class="line">functiondef ::= function funcbody</span><br><span class="line"></span><br><span class="line">funcbody ::= ‘(’ [parlist] ‘)’ block end</span><br><span class="line"></span><br><span class="line">parlist ::= namelist [‘,’ varargparam] | varargparam</span><br><span class="line"></span><br><span class="line">varargparam ::= ‘...’ [Name]</span><br><span class="line"></span><br><span class="line">tableconstructor ::= ‘&#123;’ [fieldlist] ‘&#125;’</span><br><span class="line"></span><br><span class="line">fieldlist ::= field &#123;fieldsep field&#125; [fieldsep]</span><br><span class="line"></span><br><span class="line">field ::= ‘[’ exp ‘]’ ‘=’ exp | Name ‘=’ exp | exp</span><br><span class="line"></span><br><span class="line">fieldsep ::= ‘,’ | ‘;’</span><br><span class="line"></span><br><span class="line">binop ::=  ‘+’ | ‘-’ | ‘*’ | ‘/’ | ‘//’ | ‘^’ | ‘%’ | </span><br><span class="line">	 ‘&amp;’ | ‘~’ | ‘|’ | ‘&gt;&gt;’ | ‘&lt;&lt;’ | ‘..’ | </span><br><span class="line">	 ‘&lt;’ | ‘&lt;=’ | ‘&gt;’ | ‘&gt;=’ | ‘==’ | ‘~=’ | </span><br><span class="line">	 and | or</span><br><span class="line"></span><br><span class="line">unop ::= ‘-’ | not | ‘#’ | ‘~’</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://miyu52.github.io">Miyu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://miyu52.github.io/posts/B5GSES7P6H2XGS9Y/">https://miyu52.github.io/posts/B5GSES7P6H2XGS9Y/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://miyu52.github.io" target="_blank">Miyu</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Language/">Language</a><a class="post-meta__tags" href="/tags/Lua/">Lua</a></div><div class="post-share"><div class="social-share" data-image="/assets/images/default_cover_1.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/posts/09XPQ332PI9M3ITM/" title="实用脚本"><img class="cover" src="/assets/images/default_cover_2.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">实用脚本</div></div><div class="info-2"><div class="info-item-1">引言虽然现在代码都是由 AI 生成，开发环境也能由 AI 管理了，但是描述需求、写 Skills 提示词也是一种烦恼，收藏一下常用的脚本。 PS：以下脚本也都是 AI 生成，不过都经过我手动多次验证。 Bash批量哈希sha256，递归，实时显示 1( count=0; while IFS= read -r -d &#x27;&#x27; f; do f=$&#123;f#./&#125;; if [ ! -e &quot;$f.sha256&quot; ] &amp;&amp; [ ! -L &quot;$f.sha256&quot; ]; then echo &quot;Hashing: $f&quot;; if hash_output=$(sha256sum -- &quot;$f&quot;); then echo &quot;$hash_output&quot; &gt; &quot;$f.sha256&quot;; echo &quot;SHA256: $&#123;hash_output%% *&#125;&quot;; count=$((count+1)); el...</div></div></div></a><a class="pagination-related" href="/posts/O37O43OFMAW9VO5V/" title="Dockerd 配置代理"><img class="cover" src="/assets/images/default_cover_3.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Dockerd 配置代理</div></div><div class="info-2"><div class="info-item-1">根据 Docker 官方文档 HTTP&#x2F;HTTPS 代理配置指南，Docker 守护进程（dockerd）的代理需通过 Systemd 环境变量 配置，而非 daemon.json 文件。以下是详细步骤及注意事项： 配置原理Docker 守护进程在启动时会读取 Systemd 管理的环境变量 HTTP_PROXY、HTTPS_PROXY 和 NO_PROXY。这些变量需通过 Systemd 服务文件覆盖 的方式设置，确保代理对所有 Docker 操作（如 docker pull、docker build）生效。 具体步骤1. 创建 Systemd 服务覆盖目录1sudo mkdir -p /etc/systemd/system/docker.service.d  2. 创建代理配置文件在 /etc/systemd/system/docker.service.d/http-proxy.conf 文件中添加以下内容（替换 [proxy-server] 和 [port] 为实际代理地址和端口）： 1234[Service]Environment=&quot;HTTP_PROX...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/assets/images/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Miyu</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">3</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/miyu52"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">暂无公告</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%80%BC%E5%92%8C%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">值和类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F%E3%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">1.2.</span> <span class="toc-text">作用域、变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83"><span class="toc-number">1.3.</span> <span class="toc-text">环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-number">1.4.</span> <span class="toc-text">错误处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%83%E8%A1%A8%E5%92%8C%E5%85%83%E6%96%B9%E6%B3%95"><span class="toc-number">1.5.</span> <span class="toc-text">元表和元方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6"><span class="toc-number">1.6.</span> <span class="toc-text">垃圾回收</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%B1%E8%A1%A8"><span class="toc-number">1.7.</span> <span class="toc-text">弱表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8F%E7%A8%8B"><span class="toc-number">1.8.</span> <span class="toc-text">协程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%8D%E6%B3%95%E7%BA%A6%E5%AE%9A"><span class="toc-number">2.1.</span> <span class="toc-text">词法约定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E9%9D%A2%E5%80%BC"><span class="toc-number">2.2.</span> <span class="toc-text">字面值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A"><span class="toc-number">2.3.</span> <span class="toc-text">注释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">2.4.</span> <span class="toc-text">变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9D%97"><span class="toc-number">2.5.</span> <span class="toc-text">块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="toc-number">2.6.</span> <span class="toc-text">代码块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%8B%E5%80%BC"><span class="toc-number">2.7.</span> <span class="toc-text">赋值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E7%BB%93%E6%9E%84"><span class="toc-number">2.8.</span> <span class="toc-text">控制结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#For-%E8%AF%AD%E5%8F%A5"><span class="toc-number">2.9.</span> <span class="toc-text">For 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E"><span class="toc-number">2.10.</span> <span class="toc-text">变量声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%85%E5%85%B3%E9%97%AD%E5%8F%98%E9%87%8F"><span class="toc-number">2.11.</span> <span class="toc-text">待关闭变量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">3.</span> <span class="toc-text">表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.1.</span> <span class="toc-text">运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%97%E6%9C%AF%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.1.1.</span> <span class="toc-text">算术运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%8D%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.1.2.</span> <span class="toc-text">位运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E7%B3%BB%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.1.3.</span> <span class="toc-text">关系运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.1.4.</span> <span class="toc-text">逻辑运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.1.5.</span> <span class="toc-text">连接运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%95%BF%E5%BA%A6%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">3.1.6.</span> <span class="toc-text">长度运算符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6%E4%BC%98%E5%85%88%E7%BA%A7"><span class="toc-number">3.1.7.</span> <span class="toc-text">运算符优先级</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2%E5%92%8C%E8%BD%AC%E6%8D%A2"><span class="toc-number">3.2.</span> <span class="toc-text">强制转换和转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E6%9E%84%E9%80%A0%E5%99%A8"><span class="toc-number">3.3.</span> <span class="toc-text">表构造器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E8%B0%83%E7%94%A8"><span class="toc-number">3.4.</span> <span class="toc-text">函数调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%AE%9A%E4%B9%89"><span class="toc-number">3.5.</span> <span class="toc-text">函数定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%BB%93%E6%9E%9C%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">3.6.</span> <span class="toc-text">多结果表达式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E5%BA%93"><span class="toc-number">4.</span> <span class="toc-text">标准库</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E5%87%BD%E6%95%B0"><span class="toc-number">4.1.</span> <span class="toc-text">基本函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8F%E7%A8%8B-1"><span class="toc-number">4.2.</span> <span class="toc-text">协程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97"><span class="toc-number">4.3.</span> <span class="toc-text">模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C"><span class="toc-number">4.4.</span> <span class="toc-text">字符串操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#UTF-8"><span class="toc-number">4.5.</span> <span class="toc-text">UTF-8</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">4.6.</span> <span class="toc-text">表操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E5%87%BD%E6%95%B0"><span class="toc-number">4.7.</span> <span class="toc-text">数学函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E5%92%8C%E8%BE%93%E5%87%BA"><span class="toc-number">4.8.</span> <span class="toc-text">输入和输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F"><span class="toc-number">4.9.</span> <span class="toc-text">系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B0%83%E8%AF%95%E5%BA%93"><span class="toc-number">4.10.</span> <span class="toc-text">调试库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%8C%E6%95%B4%E8%AF%AD%E6%B3%95"><span class="toc-number">5.</span> <span class="toc-text">完整语法</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/09XPQ332PI9M3ITM/" title="实用脚本"><img src="/assets/images/default_cover_2.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="实用脚本"/></a><div class="content"><a class="title" href="/posts/09XPQ332PI9M3ITM/" title="实用脚本">实用脚本</a><time datetime="2026-09-27T07:21:09.000Z" title="发表于 2026-09-27 15:21:09">2026-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/B5GSES7P6H2XGS9Y/" title="Lua 完整语法 AIO"><img src="/assets/images/default_cover_1.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Lua 完整语法 AIO"/></a><div class="content"><a class="title" href="/posts/B5GSES7P6H2XGS9Y/" title="Lua 完整语法 AIO">Lua 完整语法 AIO</a><time datetime="2026-02-28T07:53:00.000Z" title="发表于 2026-02-28 15:53:00">2026-02-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/O37O43OFMAW9VO5V/" title="Dockerd 配置代理"><img src="/assets/images/default_cover_3.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Dockerd 配置代理"/></a><div class="content"><a class="title" href="/posts/O37O43OFMAW9VO5V/" title="Dockerd 配置代理">Dockerd 配置代理</a><time datetime="2025-03-04T08:36:17.000Z" title="发表于 2025-03-04 16:36:17">2025-03-04</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2019 - 2026 By Miyu</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const config = mermaidSrc.dataset.config ? JSON.parse(mermaidSrc.dataset.config) : {}
+      if (!config.theme) {
+        config.theme = theme
+      }
+      const mermaidThemeConfig = `%%{init: ${JSON.stringify(config)}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'miyu52/miyu52.github.io',
+      'data-repo-id': 'R_kgDOQ7n9ng',
+      'data-category-id': 'DIC_kwDOQ7n9ns4DBcsa',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="Just,Do,It" data-fontsize="15px" data-random="false" async="async"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js" defer="defer"></script><script>document.addEventListener('DOMContentLoaded', () => {
+  const pjaxSelectors = ["meta[property=\"og:image\"]","meta[property=\"og:title\"]","meta[property=\"og:url\"]","meta[property=\"og:description\"]","link[rel=\"canonical\"]","head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+  window.pjax = new Pjax({
+    elements: 'a:not([target="_blank"])',
+    selectors: pjaxSelectors,
+    cacheBust: false,
+    analytics: false,
+    scrollRestoration: false
+  })
+
+  const triggerPjaxFn = (val) => {
+    if (!val) return
+    Object.values(val).forEach(fn => {
+      try {
+        fn()
+      } catch (err) {
+        console.debug('Pjax callback failed:', err)
+      }
+    })
+  }
+
+  document.addEventListener('pjax:send', () => {
+    // removeEventListener
+    btf.removeGlobalFnEvent('pjaxSendOnce')
+    btf.removeGlobalFnEvent('themeChange')
+
+    // reset readmode
+    const $bodyClassList = document.body.classList
+    if ($bodyClassList.contains('read-mode')) $bodyClassList.remove('read-mode')
+
+    triggerPjaxFn(window.globalFn.pjaxSend)
+  })
+
+  document.addEventListener('pjax:complete', () => {
+    btf.removeGlobalFnEvent('pjaxCompleteOnce')
+    document.querySelectorAll('script[data-pjax]').forEach(item => {
+      const newScript = document.createElement('script')
+      const content = item.text || item.textContent || item.innerHTML || ""
+      Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+      newScript.appendChild(document.createTextNode(content))
+      item.parentNode.replaceChild(newScript, item)
+    })
+
+    triggerPjaxFn(window.globalFn.pjaxComplete)
+  })
+
+  document.addEventListener('pjax:error', e => {
+    if (e.request.status === 404) {
+      false
+        ? pjax.loadUrl('/404.html')
+        : window.location.href = e.request.responseURL
+    }
+  })
+})</script></div></body></html>
