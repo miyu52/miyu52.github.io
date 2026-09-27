@@ -38,9 +38,9 @@
   </url>
   
   <url>
-    <loc>https://miyu52.github.io/2025/05/24/hello-world/</loc>
+    <loc>https://miyu52.github.io/2025/03/04/dockerd-proxy/</loc>
     
-    <lastmod>2025-05-23</lastmod>
+    <lastmod>2025-03-04</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -56,6 +56,13 @@
 
   
   <url>
+    <loc>https://miyu52.github.io/tags/Docker/</loc>
+    <lastmod>2026-09-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://miyu52.github.io/tags/%E9%9A%8F%E8%AE%B0/</loc>
     <lastmod>2026-09-27</lastmod>
     <changefreq>weekly</changefreq>
@@ -63,6 +70,13 @@
   </url>
   
 
+  
+  <url>
+    <loc>https://miyu52.github.io/categories/DevOps/</loc>
+    <lastmod>2026-09-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
   
   <url>
     <loc>https://miyu52.github.io/categories/%E4%BB%A3%E7%A0%81/</loc>
